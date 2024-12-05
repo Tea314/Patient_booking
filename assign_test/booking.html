@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Booking</title>
+    <link rel="stylesheet" href="styles/booking.css">
+
+    <!--Add font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="header">
+      <a href="department-booking.html">
+        <img style="cursor: pointer;" class="arrow" src="/images/leading-icon.png">
+      </a>
+      <h1>Booking details</h1>
+    </div>
+    <div style="display: flex;
+    column-gap: 20px;">
+      <div class="information">
+        <div style="text-align: center;
+        font-size: 1.3em;
+        margin-bottom: 40px;">
+          <p>Patient information</p>
+        </div>
+        
+        <div style="display: flex;
+        column-gap: 20px;">
+          <div>
+            <p>Full name:</p>
+            <input class="name-input" type="text" placeholder="Enter name here">
+          </div>
+          
+          <div>
+            <p>Citizen identification number:</p>
+            <input class="id-input" type="text" placeholder="Enter ID here">
+          </div>
+        </div>
+
+        <div>
+          <label for="gender">Gender:</label>
+          <select class="gender-input" name="gender" id="gender">
+            <option value="" selected disabled hidden>Choose an option</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div>
+          <p>Date of birth:</p>
+          <input class="dob-input" type="date">
+        </div>
+      </div>
+
+      <div class="schedule">
+        <div style="text-align: center;
+        font-size: 1.3em;
+        margin-bottom: 40px;">
+          <p>Schedule</p>
+        </div>
+
+        <div style="align-items: center;
+        display: flex;">
+          <p style="margin: 0;
+            margin-right:20px">Choose date:</p>
+          <input class="date-input" type="date">
+          <button class="submit-button" disabled>Submit</button>
+        </div>
+        <div class="date-display">
+          
+        </div>
+        <div>
+          <button class="confirm-button" disabled>Confirm</button>
+        </div>
+      </div>
+    </div>
+    <script src="script/booking.js" type="module"></script>
+  </body>
+</html>

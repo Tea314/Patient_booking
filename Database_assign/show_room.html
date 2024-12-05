@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Rooms</title>
+    <link rel="stylesheet" href="styles/show_room.css">
+    <!--Add font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script type="text/javascript" src="/show_room.js"></script>
+    <h1>Room List</h1>
+    <!-- Button to trigger the loading of rooms -->
+    <button class="show-button js-show-button">Show All Rooms</button>
+    <!-- Table to display the room details -->
+    <div class="table-container">
+        <table id="roomTable">
+            <thead>
+                <tr>
+                    <th>Room ID</th>
+                    <th>Capacity</th>
+                    <th>Room Type</th>
+                </tr>
+            </thead>
+            <tbody id="roomTableBody"></tbody>
+        </table>
+
+        <button class="confirm-button" disabled>Confirm</button>
+    </div>
+    <!-- <div class="test"></div> -->
+    <script type="module" src="show_room.js"></script>
+    <div id="updateMessage"></div>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Row Selection Example</title>
+<style>
+    .row {
+        padding: 10px;
+        margin: 5px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+    }
+    .selected {
+        background-color: #a3d2ca; /* Màu nền khi được chọn */
+    }
+    .button {
+        padding: 10px;
+        margin-top: 20px;
+        background-color: #ccc; /* Màu nền khi không thể click */
+        color: #fff;
+        border: none;
+        cursor: not-allowed;
+    }
+    .button.active {
+        background-color: #1976d2; /* Màu nền khi có thể click */
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<div id="row1" class="row">Row 1</div>
+<div id="row2" class="row">Row 2</div>
+
+<button id="actionButton" class="button" disabled>Click Me</button>
+
+<script>
+    const rows = document.querySelectorAll('.row');
+    const button = document.getElementById('actionButton');
+
+    rows.forEach(row => {
+        row.addEventListener('click', () => {
+            rows.forEach(r => r.classList.remove('selected')); // Bỏ chọn tất cả các hàng khác
+            row.classList.add('selected'); // Đổi màu hàng được chọn
+
+            button.classList.add('active'); // Đổi màu và bật chức năng click của button
+            button.disabled = false;
+        });
+    });
+
+    button.addEventListener('click', () => {
+        if (!button.disabled) {
+            alert('Button clicked!');
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        if (![...rows].some(row => row.contains(event.target))) { // Nếu click ngoài hàng
+            rows.forEach(r => r.classList.remove('selected')); // Bỏ chọn tất cả các hàng
+            button.classList.remove('active'); // Button trở về trạng thái ban đầu
+            button.disabled = true;
+        }
+    });
+</script>
+
+</body>
+</html>
