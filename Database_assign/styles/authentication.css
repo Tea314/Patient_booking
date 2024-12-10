@@ -1,0 +1,92 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Roboto;
+}
+ p {
+  padding: 0;
+  margin: 0;
+ }
+
+.left {
+  flex:1;
+}
+
+.right {
+  flex:1.5;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.login-box {
+  margin-top: 30px;
+  width: 500px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.login-button {
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: #3B9AB8;
+  color: white;
+  font-size: 1.5em;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 13px 10px;
+  cursor: pointer;
+}
+
+.tick-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.tick-box-sign-up {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 40px;
+  width: 100%;
+}
+
+.last-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  align-self: stretch;
+}
+
+.last-row button {
+  width: 100px;
+  padding: 8px 10px;
+  padding-top: 10px;
+  padding-bottom: 8px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  border: 1px solid #E5E5E5;
+  cursor: pointer;
+}
+
+.inactive {
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: #284d59;
+  color: white;
+  font-size: 1.5em;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 13px 10px;
+  cursor: not-allowed;
+}

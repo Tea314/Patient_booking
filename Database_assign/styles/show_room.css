@@ -1,50 +1,36 @@
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-table,
-th,
-td {
-  border: 1px solid black;
-}
-
-th,
-td {
-  padding: 10px;
-  text-align: left;
-}
-
-th {
-  background-color: #f2f2f2;
-}
-
 body {
-  padding: 20px;
+  padding-top: 70px;
   font-family: Roboto;
-}
-
-.show-button {
-  margin-bottom: 20px;
-  font-size: 1.2em;
-  font-weight: 700;
-  padding: 6px 10px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.15s ease;
-}
-
-.show-button:hover {
-  background-color: #d3d3d3;
-}
-
-.table-container {
   position: relative;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-.confirm-button {
-  margin-top: 50px;
+.header {
+  position: fixed;
+  display: flex;
+  top:0;
+  left:0;
+  right:0;
+  align-items: center;
+  height: 70px;
+  background-color: rgba(92, 239, 255, 0.4);
+  z-index: 100;
+}
+
+.header p {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.arrow {
+  margin-left: 20px;
+  width: 60px;
+}
+
+.confirm-button-date {
+  margin-top: 20px;
   position: absolute;
   right: 50px;
   font-size: 1.1em;
@@ -52,7 +38,7 @@ body {
   border-radius: 20px;
   padding: 10px 20px;
   font-weight: bold;
-  opacity: 0;
+  cursor: pointer;
 }
 
 .button-appear {
@@ -67,4 +53,178 @@ body {
   background-color: rgb(84, 97, 155);
   color: white;
   cursor: pointer;
+}
+
+.left {
+  flex: 1;
+}
+
+.left p {
+  font-size: 1.5em;
+}
+
+.right {
+  flex: 2;
+}
+
+.content-box {
+  background-color: lightgrey;
+  border: none;
+  border-radius: 20px;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 80px;
+  position: relative;
+}
+
+
+.room-button {
+  font-family: Roboto;
+  font-size: 1.2em;
+  font-weight: 500;
+  padding: 9px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar div {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  font-size: 14px;
+  position: relative;
+  border-radius: 7px;
+  border: 1px black solid;
+}
+
+.calendar div.disabled {
+  background-color: #d3d3d3;
+  color: #aaa;
+  pointer-events: none;
+}
+
+.calendar div.selected {
+  background-color: #4caf50;
+  color: white;
+}
+
+.room-selected {
+  background-color: lightblue;
+}
+
+.pop-up {
+  width: 450px;
+  height: 300px;
+  background-color: white;
+  border-radius: 30px;
+  padding: 10px 25px;
+}
+
+
+.pop-up button {
+
+  font-size: 1.3em;
+  font-weight: bold;
+  color: white;
+  background-color: lightblue;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 10px;
+}
+
+.inactive {
+  cursor: not-allowed;
+}
+
+.active:hover {
+  cursor: pointer;
+  background-color: rgb(79, 180, 213);
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.screen-pop-up {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.pop-up {
+  width: 450px;
+  height: 300px;
+  background-color: white;
+  border-radius: 30px;
+  padding: 10px 25px;
+  animation: slide-up 0.4s ease-out; /* Thêm hiệu ứng trượt lên */
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateY(0); /* Vị trí hiện tại (giữa màn hình) */
+    opacity: 1; /* Hiển thị */
+  }
+  to {
+    transform: translateY(100vh); /* Trượt xuống ngoài màn hình */
+    opacity: 0; /* Biến mất */
+  }
+}
+
+/* Khi popup được ẩn đi */
+.pop-up.slide-out {
+  animation: slide-out 0.4s ease-in forwards;
+}
+
+.selected-dates {
+  padding: 20px 10px;
+  font-size: 1.2em;
+  font-family: Roboto;
+  font-weight: 500;
 }
