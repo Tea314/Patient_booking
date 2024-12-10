@@ -172,3 +172,39 @@ function renderHeader(type) {
 
 renderHeader(type)
 
+function renderInformation() {
+  let html = `
+    <div style="text-align: center;
+        font-size: 1.3em;
+        margin-bottom: 40px;">
+        <p>Patient information</p>
+      </div>
+
+      <div style="display: flex;
+        column-gap: 40px;">
+        <div>
+          <p>Full name:</p>
+          <p style="font-weight: 400;">Nguyễn Lê Duy Khang</p>
+        </div>
+
+        <div>
+          <p>Citizen identification number:</p>
+          <p style="font-weight: 400;">1234567890</p>
+        </div>
+      </div>
+
+      <div>
+        <label for="gender">Gender:</label>
+        <p style="font-weight: 400;">Male</p>
+      </div>
+
+      <div>
+        <p>Date of birth:</p>
+        <p style="font-weight: 400;">2004-01-27</p>
+      </div>
+  `;
+  document.querySelector(".information").innerHTML = html;
+}
+
+renderInformation();
+

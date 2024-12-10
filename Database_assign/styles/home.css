@@ -201,3 +201,27 @@ body {
 .founded {
   color: green;
 }
+
+.profile-container {
+  position:relative;
+}
+
+.edit-profile-btn {
+  position: absolute;
+  bottom: -50px;
+  padding: 7px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 60px;
+}
+
+.edit-profile-btn:hover {
+  background-color: #bdbdbd;
+}
+
+.info-row {
+  margin-top: 15px;
+  height: 30px;
+  align-items: center;
+}

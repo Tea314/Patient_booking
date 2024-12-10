@@ -127,8 +127,8 @@ function renderAccountPopup() {
         </div>
         <div class="info-row">
           <strong>Date of Birth:</strong> 
-          <span class="display-mode">27/01/2004</span>
-          <input type="text" class="edit-mode" value="27/01/2004" style="display:none;">
+          <span class="display-mode">2004-01-27</span>
+          <input type="date" class="edit-mode" value="2004-01-27" style="display:none;">
         </div>
         <div class="info-row">
           <strong>Gender:</strong> 
