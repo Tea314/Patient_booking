@@ -2,6 +2,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: Roboto;
+  height: 100%;
 }
  p {
   padding: 0;
@@ -9,7 +10,9 @@ body {
  }
 
 .left {
-  flex:1;
+  position: relative;
+  flex: 1;
+  overflow: hidden;
 }
 
 .right {
@@ -17,6 +20,7 @@ body {
   position: relative;
   display: flex;
   justify-content: center;
+  justify-items: center;
   align-items: center;
   height: 100%;
 }

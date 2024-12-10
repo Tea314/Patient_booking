@@ -434,7 +434,7 @@ def main_window():
             return 2
 
     try:
-        eel.start("home.html", size=(1024, 1440))
+        eel.start("authentication.html", size=(1024, 1440))
     except (SystemExit, MemoryError, KeyboardInterrupt):
         pass
 
