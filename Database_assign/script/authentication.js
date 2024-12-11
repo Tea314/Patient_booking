@@ -132,7 +132,7 @@ function renderLogin() {
     const isPassword = passwordInput.type === 'password';
     passwordInput.type = isPassword ? 'text' : 'password';
     // Change the eye icon based on the state
-    eyeIcon.src = isPassword 
+    eyeIcon.src = isPassword
       ? 'https://cdn-icons-png.flaticon.com/512/709/709620.png'  // Eye with slash (Hide)
       : 'https://cdn-icons-png.flaticon.com/512/709/709612.png'; // Eye (Show)
   });
@@ -156,9 +156,20 @@ function renderLogin() {
   })
 
   const loginButton = document.querySelector('.login-button');
-  loginButton.addEventListener('click', () => {
-    if (!loginButton.disabled && document.querySelector('.email').value) {
-      window.location.href = `../home.html?email=${document.querySelector('.email').value}`
+  loginButton.addEventListener('click', async () => {
+    const email = document.querySelector('.email').value;
+    let role = await eel.get_role(email)();
+    console.log(role);
+    if (!loginButton.disabled) {
+      if (role === 'PATIENT') {
+        window.location.href = `../home.html?email=${document.querySelector('.email').value}`
+      }
+      else if (role === 'DOCTOR') {
+
+      }
+      else if (role === 'ADMIN') {
+
+      }
     }
   })
 }
@@ -338,7 +349,7 @@ function renderSignUp() {
       const isPassword = passwordInput.type === 'password';
       passwordInput.type = isPassword ? 'text' : 'password';
       // Change the eye icon based on the state
-      eyeIcon.src = isPassword 
+      eyeIcon.src = isPassword
         ? 'https://cdn-icons-png.flaticon.com/512/709/709620.png'  // Eye with slash (Hide)
         : 'https://cdn-icons-png.flaticon.com/512/709/709612.png'; // Eye (Show)
     });
@@ -352,7 +363,7 @@ function renderSignUp() {
   const passwordInput1 = document.getElementById('password1');
   const passwordInput2 = document.getElementById('password2');
   const displayMessage = document.querySelector('.display-message');
-  
+
 
   function checkPasswordMatch() {
     if (passwordInput1.value && passwordInput2.value && document.querySelector('.email').value) {
@@ -376,7 +387,7 @@ function renderSignUp() {
     const hasUpperCase = /[A-Z]/.test(password);
     if (!lengthValid) {
       passwordInput1.setCustomValidity("Length must be 10-20 characters")
-    } else if (!hasNumber){
+    } else if (!hasNumber) {
       passwordInput1.setCustomValidity("Must contains at least 1 number")
     } else if (!hasUpperCase) {
       passwordInput1.setCustomValidity("Must contains at least 1 uppercase letter")
@@ -385,13 +396,13 @@ function renderSignUp() {
     }
   }
 
-  
+
 
   passwordInput1.addEventListener('input', checkPasswordValid);
   passwordInput2.addEventListener('input', checkPasswordMatch);
 
   const emailInput = document.querySelector(".email");
-  
+
   emailInput.addEventListener('input', () => {
     if (!emailInput.value.includes("@gmail.com")) {
       emailInput.setCustomValidity("Must contains @gmail.com");
@@ -412,18 +423,18 @@ function renderSignUp() {
     }
     const savedEmail = emailInput.value;
     const savedPassword = passwordInput1.value;
-    const doctor_check =doctorCheck.checked;
+    const doctor_check = doctorCheck.checked;
     e.preventDefault();
     renderInformationInput(savedEmail, savedPassword, doctor_check);
   })
 
-  
+
 }
 
 
 function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
   const check = doctorCheck;
-    let html = `
+  let html = `
     <form class="login-box">
       <div style="display: flex;
           flex-direction: column;
@@ -590,9 +601,9 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
     </div>
       `;
   }
-      
 
-      html += `
+
+  html += `
       <div style="display: flex;
         flex-direction: column;
         gap: 16px;
@@ -620,7 +631,7 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
   const dobInput = form.querySelector(".dob");
   const genderInput = form.querySelector(".gender")
   let specialtyInput;
-  if (check) {specialtyInput = form.querySelector(".specialty");}
+  if (check) { specialtyInput = form.querySelector(".specialty"); }
 
   function checkId() {
     if (idInput.value.length === 10 && /^[0-9]+$/.test(idInput.value)) {
@@ -631,13 +642,13 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
   }
 
   idInput.addEventListener("input", checkId)
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     if (!idInput.checkValidity()) {
       e.preventDefault();
     }
     e.preventDefault();
     const fullName = nameInput.value;
-    const id = Number(idInput.value);
+    const id = idInput.value;
     const dob = dobInput.value;
     const gender = genderInput.value;
     if (check) {
@@ -654,10 +665,29 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
       localStorage.setItem("approveData", JSON.stringify(approve));
       console.log(localStorage)
     }
+    else {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0 nên cần +1
+      const day = String(today.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      let approve = {
+        name: fullName,
+        id: id,
+        dob: dob,
+        gender: gender,
+        email: savedEmail,
+        password: savedPassword,
+        today: formattedDate
+      };
+      console.log(approve);
+      const insert_appoinment = await eel.insert_user(fullName, id, savedEmail, savedPassword, gender, dob, 'PATIENT', formattedDate);
+      console.log(insert_appoinment);
+    }
     // Them else add vao db cho patient
     setTimeout(
       alert("Sign up successful")
-    , 1000)
+      , 1000)
     renderLogin();
   })
 }

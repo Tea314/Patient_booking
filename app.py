@@ -433,6 +433,96 @@ def main_window():
             print("Date expired")
             return 2
 
+    @eel.expose
+    def insert_user(name, ssn, email, password, gender, dob, role, registration_date):
+        conn = connect_db()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                INSERT INTO Users (id, name, SSN, email, password, gender, DOB, role, registrationDate) 
+                VALUES (users_seq.NEXTVAL, :name, :ssn, :email, :password, :gender, TO_DATE(:dob, 'YYYY-MM-DD'), :role, TO_DATE(:registration_date, 'YYYY-MM-DD'))
+                """
+                print({
+                    'name': name,
+                    'ssn': ssn,
+                    'email': email,
+                    'password': password,
+                    'gender': gender.upper(),
+                    'dob': dob,
+                    'role': role,
+                    'registration_date': registration_date
+                })
+                cursor.execute(query, {
+                    'name': name,
+                    'ssn': ssn,
+                    'email': email,
+                    'password': password,
+                    'gender': gender.upper(),
+                    'dob': dob,
+                    'role': role,
+                    'registration_date': registration_date
+                })
+                conn.commit()
+                print("User inserted successfully!")
+                return "Success"
+            except oracledb.DatabaseError as e:
+                print("Error during INSERT:", e)
+                return str(e)
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            return "Failed to connect to Oracle"
+        
+    @eel.expose
+    def get_role(email):
+        conn = connect_db()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                SELECT role from USERS WHERE EMAIL = :email
+                """
+                cursor.execute(query, {'email': email})
+                role = cursor.fetchone()
+                print(role[0])
+                print(type(role[0]))
+                return role[0]
+            except oracledb.DatabaseError as e:
+                print("Error during retrieve:", e)
+                return str(e)
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            return "Failed to connect to Oracle"
+        
+    @eel.expose
+    def get_name(email):
+        conn = connect_db()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                SELECT name, ssn, TO_CHAR(DOB,'YYYY-MM-DD'),GENDER from users WHERE EMAIL = :email
+                """
+                cursor.execute(query, {'email': email})
+                res = cursor.fetchone()
+                if res:
+                    keys = ['name', 'ssn', 'dob', 'gender']
+                    return dict(zip(keys, res))
+                else:
+                    return None
+            except oracledb.DatabaseError as e:
+                print("Error during retrieve:", e)
+                return str(e)
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            return "Failed to connect to Oracle"
+
     try:
         eel.start("authentication.html", size=(1024, 1440))
     except (SystemExit, MemoryError, KeyboardInterrupt):

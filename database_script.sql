@@ -27,6 +27,11 @@ CREATE TABLE Doctor (
     ON DELETE CASCADE DEFERRABLE
 );  
 
+CREATE TABLE Room (  
+    ID INT PRIMARY KEY,  
+    Capacity INT,  
+    Room_type VARCHAR(50)  
+);  
 CREATE TABLE Patient (  
     ID VARCHAR(10) PRIMARY KEY,  
     patient_ssn varchar(10) not null unique,
@@ -38,11 +43,6 @@ CREATE TABLE Patient (
     CONSTRAINT 	fk_room_id	FOREIGN KEY (Room_ID) 
     REFERENCES Room(ID) 
     ON DELETE SET NULL DEFERRABLE
-);  
-CREATE TABLE Room (  
-    ID INT PRIMARY KEY,  
-    Capacity INT,  
-    Room_type VARCHAR(50)  
 );  
 
 CREATE TABLE Appointment (  
@@ -105,6 +105,14 @@ CREATE TABLE Feedback (
 );
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------
+CREATE SEQUENCE users_seq START WITH 1;
+alter sequence users_seq restart start with 1;
+SELECT users_seq.NEXTVAL FROM DUAL;
+
+INSERT INTO USERS VALUES (users_seq.NEXTVAL, 'admin', '0000000000', 'admin@gmail.com', 'Admin12345', 'OTHER', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'ADMIN', TO_DATE('2000-01-01', 'YYYY-MM-DD'));
+INSERT INTO USERS (id, name, SSN, email, password, gender, DOB, role, registrationDate)
+VALUES (users_seq.NEXTVAL, 'Huynh Tea', '0000000001', 'tea1@gmail.com', 'Khoa112345', 'MALE', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'PATIENT', TO_DATE('2000-01-01', 'YYYY-MM-DD'));
+
 
 INSERT INTO ROOM (ID, Capacity, ROOM_TYPE) VALUES (1, 2, 'DELUXE');
 INSERT INTO ROOM (ID, Capacity, ROOM_TYPE) VALUES (2, 4, 'NORMAL');

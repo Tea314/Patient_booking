@@ -1,6 +1,18 @@
-// const url = new URL(window.location.href)
-// const id = url.searchParams.get('id');
+let information;
+(async function () {
+  const url = new URL(window.location.href);
+  const email = url.searchParams.get('email');
+  console.log(email);
 
+  async function getInformation(email) {
+    return await eel.get_name(email)();
+  }
+
+  information = await getInformation(email);
+  console.log(information);
+  renderHeader();
+})();
+const fullName = '';
 document.querySelector('.right').addEventListener('click', () => {
   window.location.href = 'department-booking.html';
 })
@@ -15,7 +27,7 @@ document.querySelector('.room-booking').addEventListener('click', () => {
 const confirmButton = document.querySelector('.confirm-button')
 
 document.querySelector('.pop-up-input').addEventListener('input', () => {
-  if(document.querySelector('.pop-up-input').value) {
+  if (document.querySelector('.pop-up-input').value) {
     confirmButton.classList.remove('inactive')
     confirmButton.classList.add('active')
     confirmButton.disabled = false;
@@ -87,7 +99,8 @@ function closePopup(popup) {
 }
 
 
-function renderHeader() {
+async function renderHeader() {
+  console.log(information.name);
   document.querySelector('.header').innerHTML = `
     <p>One Person Hospital</p>
     <div style="display: flex;
@@ -95,7 +108,7 @@ function renderHeader() {
       padding-right: 20px;
       gap: 20px;
       justify-content: center;">
-      <p class="account-name">Nguyễn Lê Duy Khang</p>
+      <p class="account-name">${information.name}</p>
       <img class="acc-img" src="./images/cat.jpg">
     </div>
   `;
@@ -107,32 +120,32 @@ function renderHeader() {
 
 function renderAccountPopup() {
   const popupContent = document.querySelector('.information-pop-up');
-  
+
   // Trạng thái ban đầu của form
   let isEditing = false;
-  
+
   popupContent.innerHTML = `
     <div class="profile-container">
       <h2>User Profile</h2>
       <div class="profile-info">
         <div class="info-row">
           <strong>Full Name:</strong> 
-          <span class="display-mode">Nguyễn Lê Duy Khang</span>
-          <input type="text" class="edit-mode" value="Nguyễn Lê Duy Khang" style="display:none;">
+          <span class="display-mode">${information.name}</span>
+          <input type="text" class="edit-mode" value=${information.name} style="display:none;">
         </div>
         <div class="info-row">
           <strong>ID:</strong> 
-          <span class="display-mode">1234567890</span>
-          <input type="text" class="edit-mode" value="1234567890" style="display:none;">
+          <span class="display-mode">${information.ssn}</span>
+          <input type="text" class="edit-mode" value=${information.ssn} style="display:none;">
         </div>
         <div class="info-row">
           <strong>Date of Birth:</strong> 
-          <span class="display-mode">2004-01-27</span>
-          <input type="date" class="edit-mode" value="2004-01-27" style="display:none;">
+          <span class="display-mode">${information.dob}</span>
+          <input type="date" class="edit-mode" value=${information.dob} style="display:none;">
         </div>
         <div class="info-row">
           <strong>Gender:</strong> 
-          <span class="display-mode">Male</span>
+          <span class="display-mode">${information.gender}</span>
           <select class="edit-mode" style="display:none;">
             <option value="Male" selected>Male</option>
             <option value="Female">Female</option>
@@ -168,4 +181,3 @@ function renderAccountPopup() {
     }
   });
 }
-renderHeader()
