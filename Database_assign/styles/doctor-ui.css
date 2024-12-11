@@ -1,0 +1,284 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  padding-top: 70px;
+  padding-left: 0px;
+  font-family: Roboto;
+  position: relative;
+  padding-bottom: 0;
+  overflow: hidden;
+  margin: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+
+.header {
+  position: fixed;
+  display: flex;
+  top:0;
+  left:0;
+  right:0;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+  background-color: rgba(92, 239, 255, 0.4);
+  z-index: 100;
+}
+
+.header p {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.header img {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+}
+
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+
+.account-pop-up,
+.report-pop-up {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.information-pop-up {
+  width: 450px;
+  height: 350px;
+  background-color: white;
+  border-radius: 30px;
+  padding: 10px 25px;
+  animation: slide-up 0.4s ease-out; /* Thêm hiệu ứng trượt lên */
+}
+
+.report-information-pop-up {
+  width: 450px;
+  height: 300px;
+  background-color: white;
+  border-radius: 30px;
+  padding: 10px 25px;
+  animation: slide-up 0.4s ease-out; /* Thêm hiệu ứng trượt lên */
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateY(0); /* Vị trí hiện tại (giữa màn hình) */
+    opacity: 1; /* Hiển thị */
+  }
+  to {
+    transform: translateY(100vh); /* Trượt xuống ngoài màn hình */
+    opacity: 0; /* Biến mất */
+  }
+}
+
+/* Khi popup được ẩn đi */
+.information-pop-up.slide-out {
+  animation: slide-out 0.4s ease-in forwards;
+}
+
+.report-information-pop-up.slide-out {
+  animation: slide-out 0.4s ease-in forwards;
+}
+
+
+
+.profile-container {
+  position:relative;
+}
+
+.edit-profile-btn {
+  position: absolute;
+  bottom: -50px;
+  padding: 7px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 60px;
+}
+
+.edit-profile-btn:hover {
+  background-color: #bdbdbd;
+}
+
+.save-button {
+  position: absolute;
+  bottom: -50px;
+  padding: 7px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 60px;
+}
+
+.save-button:hover {
+  background-color: #bdbdbd;
+}
+
+.info-row {
+  margin-top: 15px;
+  height: 30px;
+  align-items: center;
+}
+
+.side-bar {
+  flex:1;
+  padding-left: 20px;
+  padding-top: 150px;
+  height: 100%;
+}
+
+.consult-button,
+.availability-button {
+  background-color: rgb(229, 229, 229);
+  margin-bottom: 40px;
+  font-family: Roboto;
+  font-size: 1.1em;
+  font-weight: bold;
+  padding: 5px 15px;
+  width: 150px;
+  height: 60px;
+  border: none;
+  border-radius: 20px;
+  box-shadow: -5px 5px 1px rgba(0, 0, 0, 0.3);
+  
+}
+
+.consult-button {
+  background-color: rgb(117, 218, 243);
+  cursor: pointer;
+}
+
+.content {
+  flex: 7;
+  background-color: rgb(241, 240, 240);
+  padding-left: 30px;
+  height: 100%;
+}
+
+.container {
+  margin-top: 50px;
+  width: 98%;
+  height: 80%;
+  overflow-y: scroll;
+  padding-top: 10px;
+  padding-left: 20px;
+}
+
+.content-row {
+  height: 100px;
+  width: 95%;
+  background-color: white;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-left: 10px;
+  padding-right: 20px;
+  border-radius: 10px;
+  /* padding-left: 10px; */
+}
+
+.date-box {
+  background-color: #dcdcdc;
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-box p {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.first-row,
+.second-row {
+  display: flex;
+  width: 90%;
+  height: 50%;
+  align-items: center;
+  gap: 10px
+}
+
+
+.tooltip {
+  position: absolute;
+  bottom: -5px;
+  left: 17px;
+  font-size: 15px;
+  margin: 0;
+  background-color: #bdbdbd;
+  padding: 5px 7px;
+  border: none;
+  border-radius: 5px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.availability-button:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.report-button {
+  padding: 5px 7px;
+  font-weight: 500;
+  font-family: Roboto;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.disabled {
+  cursor: not-allowed;
+}
