@@ -208,7 +208,7 @@ function renderSignUp() {
         <p style="color: #000;
         font-size: 20px;
         font-weight: 400;">Email address</p>
-        <input class="email" placeholder="Email address" style="
+        <input required class="email" placeholder="Email address" style="
         width: 483px;
         padding-left: 14px;
         padding-top: 14px;
@@ -228,7 +228,7 @@ function renderSignUp() {
                   font-size: 20px;
                   font-weight: 400;">Your password</p>
         <div style="position: relative; width: 490px;">
-          <input id="password1" 
+          <input required id="password1" 
                 type="password" 
                 placeholder="Enter password" 
                 style="display: flex;
@@ -265,7 +265,7 @@ function renderSignUp() {
                   font-size: 20px;
                   font-weight: 400;">Confirm your password</p>
         <div style="position: relative; width: 490px;">
-          <input id="password2" 
+          <input required id="password2" 
                 type="password" 
                 placeholder="Enter password" 
                 style="display: flex;
@@ -347,6 +347,7 @@ function renderSignUp() {
   // Apply toggle function to both password fields
   togglePasswordVisibility('password1', 'eyeIcon1');
   togglePasswordVisibility('password2', 'eyeIcon2');
+
 
   const passwordInput1 = document.getElementById('password1');
   const passwordInput2 = document.getElementById('password2');
@@ -456,6 +457,17 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
             text-decoration-thickness: auto;
             text-underline-offset: auto;
             text-underline-position: from-font;">Log In</a>
+
+          <a class="go-back" style="font-size: 15px;
+            cursor: pointer;
+            margin-left: 10px;
+            color: var(--primary, #3B9AB8);
+            text-decoration-line: underline;
+            text-decoration-style: solid;
+            text-decoration-skip-ink: auto;
+            text-decoration-thickness: auto;
+            text-underline-offset: auto;
+            text-underline-position: from-font;">Go back</a>
         </div>
       </div>
 
@@ -591,6 +603,15 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
     </form>
   `;
   document.querySelector(".right").innerHTML = html;
+
+  document.querySelector('.log-in-ui').addEventListener('click', () => {
+    renderLogin();
+  });
+
+  document.querySelector('.go-back').addEventListener('click', () => {
+    renderSignUp();
+  });
+
 
   const form = document.querySelector(".login-box");
 
