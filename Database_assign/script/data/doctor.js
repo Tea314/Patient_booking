@@ -14,3 +14,6 @@ let images = Array(Object.keys(doctors).length).fill(value)
 doctors.forEach((doctor, index) => {
   doctor[3] = images[index];
 })
+value = 'images\\duc_doctor.png';
+images = Array(Object.keys(doctors).length).fill(value)
+doctors[3][3] = value;
