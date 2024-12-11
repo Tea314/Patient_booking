@@ -637,7 +637,7 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
     }
     e.preventDefault();
     const fullName = nameInput.value;
-    const id = Number(idInput.value);
+    const id = idInput.value;
     const dob = dobInput.value;
     const gender = genderInput.value;
     if (check) {
