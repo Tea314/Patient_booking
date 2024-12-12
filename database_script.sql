@@ -109,9 +109,10 @@ CREATE SEQUENCE users_seq START WITH 1;
 alter sequence users_seq restart start with 1;
 SELECT users_seq.NEXTVAL FROM DUAL;
 
+SELECT role from USERS WHERE EMAIL = 'huynhkhoa03012004@gmail.com';
+SELECT name, ssn, TO_CHAR(DOB,'YYYY-MM-DD'),GENDER from users WHERE EMAIL = 'huynhkhoa03012004@gmail.com';
 INSERT INTO USERS VALUES (users_seq.NEXTVAL, 'admin', '0000000000', 'admin@gmail.com', 'Admin12345', 'OTHER', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'ADMIN', TO_DATE('2000-01-01', 'YYYY-MM-DD'));
-INSERT INTO USERS (id, name, SSN, email, password, gender, DOB, role, registrationDate)
-VALUES (users_seq.NEXTVAL, 'Huynh Tea', '0000000001', 'tea1@gmail.com', 'Khoa112345', 'MALE', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'PATIENT', TO_DATE('2000-01-01', 'YYYY-MM-DD'));
+INSERT INTO USERS VALUES (users_seq.NEXTVAL, 'Huynh Tea', '0000000001', 'tea1@gmail.com', 'Khoa112345', 'MALE', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'PATIENT', TO_DATE('2000-01-01', 'YYYY-MM-DD'));
 
 
 INSERT INTO ROOM (ID, Capacity, ROOM_TYPE) VALUES (1, 2, 'DELUXE');
@@ -249,6 +250,14 @@ BEGIN
     INSERT INTO Invoice (ID_Patient, Amount, IssueDate)  
     VALUES (NEW.ID_Patient, 100.00, CURDATE()); -- Assuming a fixed amount for simplicity  
 END;  
+/
+
+INSERT INTO USERS VALUES (users_seq.NEXTVAL, 'Huynh Tea', '0000000001', 'tea1@gmail.com', 'Khoa112345', 'MALE', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'PATIENT', TO_DATE('2000-01-01', 'YYYY-MM-DD'));
+
+INSERT INTO Users (id, name, SSN, email, password, gender, DOB, role, registrationDate) 
+                VALUES (users_seq.NEXTVAL, 'Huynh Ngoc Khoa1', '0482040002', 'huynhkhoa340@gmail.com', 'Khoa03012004', 'FEMALE', TO_DATE(:dob, 'YYYY-MM-DD'), :role, TO_DATE(:registration_date, 'YYYY-MM-DD'))
+
+
 
 
 

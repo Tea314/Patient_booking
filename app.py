@@ -486,6 +486,8 @@ def main_window():
                 """
                 cursor.execute(query, {'email': email})
                 role = cursor.fetchone()
+                if role == None:
+                    return "Wrong account"
                 print(role[0])
                 print(type(role[0]))
                 return role[0]
