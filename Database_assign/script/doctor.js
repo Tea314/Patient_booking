@@ -1,5 +1,8 @@
 import { doctors } from "./data/doctor.js";
 
+const url = new URL(window.location.href);
+const email = url.searchParams.get('email');
+
 function renderDepartment(name = '') {
   let html = ''
   doctors.forEach(doctor => {
@@ -26,7 +29,7 @@ function renderDepartment(name = '') {
   document.querySelectorAll('.book-button').forEach(button => {
     button.addEventListener('click', () => {
       const id = button.dataset.doctorId
-      window.location.href = `booking.html?name=${id}&title=doctor`;
+      window.location.href = `booking.html?name=${id}&title=doctor&email=${email}`;
     })
   })
 }
@@ -36,4 +39,8 @@ renderDepartment();
 document.querySelector(".search-bar").addEventListener("input", event => {
   console.log(event.target.value);
   renderDepartment(event.target.value);
+})
+
+document.querySelector('.arrow').addEventListener('click', () => {
+  window.location.href = `home.html?email=${email}`
 })

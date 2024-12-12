@@ -1,8 +1,8 @@
 let information;
+const url = new URL(window.location.href);
+const email = url.searchParams.get('email');
 (async function () {
-  const url = new URL(window.location.href);
-  const email = url.searchParams.get('email');
-  console.log(email);
+  
 
   async function getInformation(email) {
     return await eel.get_name(email)();
@@ -14,11 +14,11 @@ let information;
 })();
 const fullName = '';
 document.querySelector('.right').addEventListener('click', () => {
-  window.location.href = 'department-booking.html';
+  window.location.href = `department-booking.html?email=${email}`;
 })
 
 document.querySelector('.left').addEventListener('click', () => {
-  window.location.href = 'doctor-booking.html';
+  window.location.href = `doctor-booking.html?email=${email}`;
 })
 document.querySelector('.room-booking').addEventListener('click', () => {
   document.querySelector('.screen-pop-up').classList.remove('hidden')
@@ -58,7 +58,7 @@ button.addEventListener('click', () => {
     button.classList.add('inactive');
     button.disabled = true;
     setTimeout(() => {
-      window.location.href = `../show_room.html?id=${document.querySelector('.pop-up-input').value}`
+      window.location.href = `../show_room.html?email=${email}`
     }, 1000);
   }, 2000);
 });

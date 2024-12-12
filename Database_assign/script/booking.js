@@ -1,7 +1,8 @@
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'
 const url = new URL(window.location.href)
 const deptName = url.searchParams.get('name');
-const type = url.searchParams.get('title')
+const type = url.searchParams.get('title');
+const email = url.searchParams.get('email');
 const dateInput = document.querySelector('.date-input');
 const today = new Date().toISOString().split('T')[0]; // Lấy ngày hiện tại ở định dạng yyyy-mm-dd
 dateInput.setAttribute('min', today);
@@ -66,10 +67,6 @@ submitButton.addEventListener('click', () => {
 
 document.querySelector('.confirm-button').addEventListener('click', async () => {
   if (!document.querySelector('.confirm-button').disabled &&
-    document.querySelector('.name-input').value &&
-    document.querySelector('.gender-input').value &&
-    document.querySelector('.dob-input').value &&
-    document.querySelector('.id-input').value &&
     document.querySelector('.selected')) {
     const insert_patient = await eel.add_patient(document.querySelector('.id-input').value, document.querySelector('.name-input').value, document.querySelector('.dob-input').value,
       document.querySelector('.gender-input').value, -1)();
@@ -78,6 +75,8 @@ document.querySelector('.confirm-button').addEventListener('click', async () => 
         Date: ${dateSelected} - Time: ${document.querySelector('.selected').innerHTML} - Doctor id: ${doctor_id}`;
     document.querySelector('.test_2').innerHTML = confirm_response;
     const insert_appoinment = await eel.add_appointment(dateSelected, document.querySelector('.selected').innerHTML.split('-')[0] + ":00", document.querySelector('.id-input').value, doctor_id);
+    alert('Booking success!')
+    window.location.href = `home.html?email=${email}`
   }
 })
 
@@ -154,7 +153,7 @@ async function renderTimeSlots(time) {
 function renderHeader(type) {
   if (type.replace(/"/g, '') === "doctor") {
     document.querySelector('.header').innerHTML = `
-      <a class="navigation" href="doctor-booking.html">
+      <a class="navigation" href="doctor-booking.html?email=${email}">
         <img style="cursor: pointer;" class="arrow" src="/images/leading-icon.png">
       </a>
       <h1>Booking details</h1>
@@ -162,7 +161,7 @@ function renderHeader(type) {
 
   } else if (type.replace(/"/g, '') === "department") {
     document.querySelector('.header').innerHTML = `
-      <a class="navigation" href="department-booking.html">
+      <a class="navigation" href="department-booking.html?email=${email}">
         <img style="cursor: pointer;" class="arrow" src="/images/leading-icon.png">
       </a>
       <h1>Booking details</h1>

@@ -1,4 +1,8 @@
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'
+
+// const url = new URL(window.location.href);
+// const email = url.searchParams.get('email');
+
 const accPopUp = document.querySelector('.account-pop-up');
 const reportPopUp = document.querySelector('.report-pop-up');
 // Thêm sự kiện để ẩn popup khi nhấn ra ngoài
