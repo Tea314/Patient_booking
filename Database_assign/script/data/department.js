@@ -1,173 +1,173 @@
 export let departments = [{
   id: 1,
-  name: "Co xuong khop",
+  name: "Musculoskeletal System",
   images: "images\\101627-co-xuong-khop.png"
 }, {
   id: 2,
-  name: "Than kinh",
+  name: "Neurology",
   images: "images\\101739-than-kinh.png"
 }, {
   id: 3,
-  name: "Tieu hoa",
+  name: "Gastroenterology",
   images: "images\\101713-tieu-hoa.png"
 }, {
   id: 4,
-  name: "Tim mach",
+  name: "Cardiology",
   images: "images\\101713-tim-mach.png"
 }, {
   id: 5,
-  name: "Tai mui hong",
+  name: "Ent - Eye - Odontology",
   images: "images\\101713-tai-mui-hong.png"
 }, {
   id: 6,
-  name: "Cot song",
+  name: "Spinal Column",
   images: "images\\101627-cot-song.png"
 }, {
   id: 7,
-  name: "Y hoc co truyen",
+  name: "Traditional Medicine",
   images: "images\\101739-y-hoc-co-truyen.png"
 }, {
   id: 8,
-  name: "Cham cuu",
+  name: "Acupuncture",
   images: "images\\101627-cham-cuu.png"
 }, {
   id: 9,
-  name: "San phu khoa",
+  name: "Obstetrics - Gynaecology",
   images: "images\\101713-san-phu-khoa.png"
 }, {
   id: 10,
-  name: "Sieu am thai",
+  name: "Fetal Echocardiography",
   images: "images\\101713-sieu-am-thai.png"
 }, {
   id: 11,
-  name: "Nhi khoa",
+  name: "Pediatrics",
   images: "images\\101655-nhi-khoa.png"
 }, {
   id: 12,
-  name: "Da lieu",
+  name: "Dermatology",
   images: "images\\101638-da-lieu.png"
 }, {
   id: 13,
-  name: "Benh viem gan",
+  name: "Hepato",
   images: "images\\101739-viem-gan.png"
 }, {
   id: 14,
-  name: "Suc khoe tam than",
+  name: "Mental Health",
   images: "images\\101713-suc-khoe-tam-than.png"
 }, {
   id: 15,
-  name: "Di ung mien dich",
+  name: "Immunology",
   images: "images\\101638-di-ung-mien-dich.png"
 }, {
   id: 16,
-  name: "Ho hap - Phoi",
+  name: "Respiratory - Lung",
   images: "images\\101638-ho-hap-phoi.png"
 }, {
   id: 17,
-  name: "Ngoai than kinh",
+  name: "Neurosurgery",
   images: "images\\101655-ngoai-than-kinh.png"
 }, {
   id: 18,
-  name: "Nam hoc",
+  name: "Andrology",
   images: "images\\101655-nam-hoc.png"
 }, {
   id: 19,
-  name: "Chuyen khoa mat",
+  name: "Ophthalmology",
   images: "images\\101638-mat.png"
 }, {
   id: 20,
-  name: "Than - Tiet nieu",
+  name: "Kidney - Urology",
   images: "images\\101739-than-tiet-nieu.png"
 }, {
   id: 21,
-  name: "Noi khoa",
+  name: "Pediatric",
   images: "images\\101655-noi-khoa.png"
 }, {
   id: 22,
-  name: "Nha khoa",
+  name: "Dental",
   images: "images\\101655-nha-khoa.png"
 }, {
   id: 23,
-  name: "Tieu duong - Noi tiet",
+  name: "Diabetes - Endocrine",
   images: "images\\101713-tieu-duong.png"
 }, {
   id: 24,
-  name: "Phuc hoi chuc nang",
+  name: "Rehabilitation",
   images: "images\\101713-phuc-hoi-chuc-nang.png"
 }, {
   id: 25,
-  name: "Chup cong huong tu",
+  name: "MRI",
   images: "images\\101627-cong-huong-tu.png"
 }, {
   id: 26,
-  name: "Chup cat lop vi tinh",
+  name: "Computed Tomography (CT)",
   images: "images\\101627-chup-cat-lop.png"
 }, {
   id: 27,
-  name: "Noi soi tieu hoa",
+  name: "Gastroenterology",
   images: "images\\101655-noi-soi-tieu-hoa.png"
 }, {
   id: 28,
-  name: "Ung buou",
+  name: "Oncology",
   images: "images\\101739-ung-buou.png"
 }, {
   id: 29,
-  name: "Da lieu tham my",
+  name: "Cosmetic Dermatology",
   images: "images\\101638-da-lieu-tham-my.png"
 }, {
   id: 30,
-  name: "Truyen nhiem",
+  name: "Infectious Diseases ",
   images: "images\\101739-truyen-nhiem.png"
 }, {
   id: 31,
-  name: "Bac si gia dinh",
+  name: "Family Doctor",
   images: "images\\101627-bac-si-gia-dinh.png"
 }, {
   id: 32,
-  name: "Tao hinh ham mat",
+  name: "Maxillofacial Surgery",
   images: "images\\101713-tao-hinh-ham-mat.png"
 }, {
   id: 33,
-  name: "Tu van, tri lieu tam ly",
+  name: "Psychotherapy",
   images: "images\\101739-tu-van-tam-ly.png"
 }, {
   id: 34,
-  name: "Vo sinh - Hiem muon",
+  name: "Infertility",
   images: "images\\101739-vo-sinh-hiem-muon.png"
 }, {
   id: 35,
-  name: "Chan thuong chinh hinh",
+  name: "Trauma - Orthopedics",
   images: "images\\101627-chan-thuong-chinh-hinh.png"
 }, {
   id: 36,
-  name: "Nieng rang",
+  name: "Orthodontics",
   images: "images\\101655-nieng-rang.png"
 }, {
   id: 37,
-  name: "Boc rang su",
+  name: "Implant Porcelain Teeth",
   images: "images\\101627-boc-rang-su.png"
 }, {
   id: 38,
-  name: "Trong rang implant",
+  name: "Dental Implant",
   images: "images\\101739-trong-rang.png"
 }, {
   id: 39,
-  name: "Nho rang khon",
+  name: "Wisdom Tooth Extraction",
   images: "images\\101655-nho-rang-khon.png"
 }, {
   id: 40,
-  name: "Nha khoa tong quat",
+  name: "General Dentistry",
   images: "images\\101655-nha-khoa.png"
 }, {
   id: 41,
-  name: "Nha khoa tre em",
+  name: "Pediatric Dentistry",
   images: "images\\101655-nha-khoa-tre-em.png"
 }, {
   id: 42,
-  name: "Tuyen giap",
+  name: "Thyroid",
   images: "images\\101739-tuyen-giap.png"
 }, {
   id: 43,
-  name: "Chuyen khoa vu",
+  name: "Breast Specialist",
   images: "images\\115336-vu.png"
 }]

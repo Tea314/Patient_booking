@@ -165,7 +165,18 @@ def main_window():
     def show_all_doctor():
         conn = connect_db()
         cursor = conn.cursor()
-        show_query = "SELECT ID, NAME, SPECIALITY FROM DOCTOR"
+        show_query = """
+                SELECT 
+                    d.ID, 
+                    u.name, 
+                    d.Speciality
+                FROM 
+                    Doctor d
+                JOIN 
+                    Users u
+                ON 
+                    d.ID = u.id
+                 """
         cursor.execute(show_query)
         message = "Show all doctor successfully"
         rows = cursor.fetchall()
@@ -221,7 +232,8 @@ def main_window():
         cursor.execute(query_to_find_doctor_id, {"speciality": f"%{speciality}%"})
         doctor_id = cursor.fetchall()
         doctor_id_list = [x[0] for x in doctor_id]
-        # print(doctor_id_list)
+        print(doctor_id)
+        print(doctor_id_list)
         # print(type(doctor_id_list))
         query_to_find_time = """
             SELECT DOCTOR_ID,TIME_REGIS
@@ -280,7 +292,7 @@ def main_window():
             if x[1] in time_lefted:
                 count_time[time_lefted.index(x[1])] += 1
         for i in range(len(time_lefted)):
-            if count_time[i] == len(doctor_id):
+            if count_time[i] == len(doctor_id_list):
                 time_lefted.remove(time_lefted[i])
         time_interval = timedelta(minutes=10)
         for i in range(len(time_lefted)):
@@ -507,12 +519,62 @@ def main_window():
             try:
                 cursor = conn.cursor()
                 query = """
-                SELECT name, ssn, TO_CHAR(DOB,'YYYY-MM-DD'),GENDER from users WHERE EMAIL = :email
+                SELECT id,name, ssn, TO_CHAR(DOB,'YYYY-MM-DD'),GENDER from users WHERE EMAIL = :email
                 """
                 cursor.execute(query, {'email': email})
                 res = cursor.fetchone()
                 if res:
-                    keys = ['name', 'ssn', 'dob', 'gender']
+                    keys = ['id','name', 'ssn', 'dob', 'gender']
+                    return dict(zip(keys, res))
+                else:
+                    return None
+            except oracledb.DatabaseError as e:
+                print("Error during retrieve:", e)
+                return str(e)
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            return "Failed to connect to Oracle"
+        
+    @eel.expose
+    def get_information_room_booking(email):
+        conn = connect_db()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                    SELECT 
+                        u_p.SSN AS Patient_ID, 
+                        u_p.name AS Patient_Name, 
+                        d.ID AS Doctor_ID, 
+                        u_d.name AS Doctor_Name, 
+                        d.Speciality AS Doctor_Department
+                    FROM 
+                        Patient p
+                    JOIN 
+                        Users u_p 
+                    ON 
+                        p.ID = u_p.ID
+                    JOIN 
+                        Appointment a 
+                    ON 
+                        p.ID = a.Patient_ID
+                    JOIN 
+                        Doctor d 
+                    ON 
+                        a.Doctor_ID = d.ID
+                    JOIN 
+                        Users u_d 
+                    ON 
+                        d.ID = u_d.ID
+                    WHERE 
+                        u_p.role = 'PATIENT' AND u_p.EMAIL = :email
+                """
+                cursor.execute(query, {'email': email})
+                res = cursor.fetchone()
+                if res:
+                    keys = ['patient_id','patient_name', 'doctor_id', 'doctor_name', 'speciality']
                     return dict(zip(keys, res))
                 else:
                     return None

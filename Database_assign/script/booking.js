@@ -10,6 +10,18 @@ dateInput.setAttribute('min', today);
 const submitButton = document.querySelector('.submit-button')
 let dateDisplay;
 let dateSelected;
+let information;
+(async function () {
+
+
+  async function getInformation(email) {
+    return await eel.get_name(email)();
+  }
+
+  information = await getInformation(email);
+  console.log(information);
+  renderInformation();
+})();
 dateInput.addEventListener('input', () => {
   dateDisplay = dayjs(dateInput.value).format('dddd DD MMMM YYYY');
   dateSelected = dayjs(dateInput.value).format('YYYY-MM-DD');
@@ -68,13 +80,12 @@ submitButton.addEventListener('click', () => {
 document.querySelector('.confirm-button').addEventListener('click', async () => {
   if (!document.querySelector('.confirm-button').disabled &&
     document.querySelector('.selected')) {
-    const insert_patient = await eel.add_patient(document.querySelector('.id-input').value, document.querySelector('.name-input').value, document.querySelector('.dob-input').value,
-      document.querySelector('.gender-input').value, -1)();
     const doctor_id = await eel.find_doctor_id(dateSelected, document.querySelector('.selected').innerHTML.split('-')[0], deptName)();
-    let confirm_response = `${deptName} - Name: ${document.querySelector('.name-input').value} - ID: ${document.querySelector('.id-input').value} - Gender: ${document.querySelector('.gender-input').value} - DOB: ${document.querySelector('.dob-input').value}
+    console.log(doctor_id);
+    let confirm_response = `${deptName} - Name: ${information.name} - ID: ${information.id} - Gender: ${information.gender} - DOB: ${information.dob}
         Date: ${dateSelected} - Time: ${document.querySelector('.selected').innerHTML} - Doctor id: ${doctor_id}`;
     document.querySelector('.test_2').innerHTML = confirm_response;
-    const insert_appoinment = await eel.add_appointment(dateSelected, document.querySelector('.selected').innerHTML.split('-')[0] + ":00", document.querySelector('.id-input').value, doctor_id);
+    const insert_appoinment = await eel.add_appointment(dateSelected, document.querySelector('.selected').innerHTML.split('-')[0] + ":00", information.id, doctor_id);
     alert('Booking success!')
     window.location.href = `home.html?email=${email}`
   }
@@ -183,27 +194,27 @@ function renderInformation() {
         column-gap: 40px;">
         <div>
           <p>Full name:</p>
-          <p style="font-weight: 400;">Nguyễn Lê Duy Khang</p>
+          <p style="font-weight: 400;">${information.name}</p>
         </div>
 
         <div>
           <p>Citizen identification number:</p>
-          <p style="font-weight: 400;">1234567890</p>
+          <p style="font-weight: 400;">${information.ssn}</p>
         </div>
       </div>
 
       <div>
         <label for="gender">Gender:</label>
-        <p style="font-weight: 400;">Male</p>
+        <p style="font-weight: 400;">${information.gender}</p>
       </div>
 
       <div>
         <p>Date of birth:</p>
-        <p style="font-weight: 400;">2004-01-27</p>
+        <p style="font-weight: 400;">${information.dob}</p>
       </div>
   `;
   document.querySelector(".information").innerHTML = html;
 }
 
-renderInformation();
+
 

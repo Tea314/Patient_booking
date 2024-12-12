@@ -2,7 +2,7 @@ let information;
 const url = new URL(window.location.href);
 const email = url.searchParams.get('email');
 (async function () {
-  
+
 
   async function getInformation(email) {
     return await eel.get_name(email)();
@@ -12,7 +12,6 @@ const email = url.searchParams.get('email');
   console.log(information);
   renderHeader();
 })();
-const fullName = '';
 document.querySelector('.right').addEventListener('click', () => {
   window.location.href = `department-booking.html?email=${email}`;
 })

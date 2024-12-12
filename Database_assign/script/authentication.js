@@ -162,10 +162,10 @@ function renderLogin() {
     console.log(role);
     if (!loginButton.disabled) {
       if (role === 'PATIENT') {
-        window.location.href = `../home.html?email=${document.querySelector('.email').value}`
+        window.location.href = `../home.html?email=${document.querySelector('.email').value}`;
       }
       else if (role === 'DOCTOR') {
-
+        window.location.href = `../doctor-ui.html?email=${document.querySelector('.email').value}`;
       }
       else if (role === 'ADMIN') {
 

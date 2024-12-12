@@ -3,23 +3,34 @@ let selectedDatesDeluxe = ['2024-12-20'];
 let selectedDatesPrivate = ['2024-12-22'];
 let chosen_button;
 const url = new URL(window.location.href)
-const id = url.searchParams.get('id');
+const email = url.searchParams.get('email');
+let information;
+(async function () {
+
+
+  async function getInformation(email) {
+    return await eel.get_information_room_booking(email)();
+  }
+
+  information = await getInformation(email);
+  console.log(information);
+  renderInformation(information.id);
+})();
 
 function renderInformation(id) {
   document.querySelector('.left').innerHTML = `
     <h1>Your information</h1>
     <p style="font-weight: 500;">Name</p>
-    <p>&#9679 Huỳnh Ngọc Khoa</p>
+    <p>&#9679 ${information.patient_name}</p>
     <p style="font-weight: 500;">ID</p>
-    <p>&#9679 ${id}</p>
+    <p>&#9679 ${information.patient_id}</p>
     <p style="font-weight: 500;">Doctor booked</p>
-    <p>&#9679 Nguyễn Lê Duy Khang</p>
+    <p>&#9679 ${information.doctor_name}</p>
     <p style="font-weight: 500;">Department</p>
-    <p>&#9679 Khoa thần kinh</p>
+    <p>&#9679 ${information.speciality}</p>
   `;
 }
 
-renderInformation(id);
 
 renderCalender(selectedDatesNormal);
 document.querySelector('.normal-button').classList.add('room-selected')
@@ -66,7 +77,7 @@ function renderCalender(selectedDatesRoom) {
 
   // Render lịch
   const calendar = document.getElementById('calendar');
-  calendar.innerHTML="";
+  calendar.innerHTML = "";
   days.forEach(({ date, day, month, year }, index) => {
     const dayElement = document.createElement('div');
     dayElement.textContent = day;
@@ -90,30 +101,30 @@ function renderCalender(selectedDatesRoom) {
           // Xóa js_date khỏi danh sách
           tempSelectedDates.delete(js_date);
           date.classList.remove('selected');
-      
+
           // Duyệt qua các ngày trong tempSelectedDates
           tempSelectedDates.forEach(selectedDate => {
-              if (new Date(selectedDate) > new Date(js_date)) {
-                  // Tìm đối tượng trong DOM
-                  const elementToRemoveClass = document.querySelector(`[data-date="${selectedDate}"]`);
-                  
-                  if (elementToRemoveClass) {
-                      elementToRemoveClass.classList.remove('selected'); // Xóa class 'selected'
-                  }
-                  
-                  // Xóa ngày khỏi danh sách
-                  tempSelectedDates.delete(selectedDate);
+            if (new Date(selectedDate) > new Date(js_date)) {
+              // Tìm đối tượng trong DOM
+              const elementToRemoveClass = document.querySelector(`[data-date="${selectedDate}"]`);
+
+              if (elementToRemoveClass) {
+                elementToRemoveClass.classList.remove('selected'); // Xóa class 'selected'
               }
+
+              // Xóa ngày khỏi danh sách
+              tempSelectedDates.delete(selectedDate);
+            }
           });
-      } else {
+        } else {
           tempSelectedDates.add(js_date);
           date.classList.add('selected');
-  
+
           // Nếu đã chọn 2 ngày, kiểm tra khoảng giữa
           if (tempSelectedDates.size >= 2) {
             const selectedArray = [...tempSelectedDates].sort(); // Sắp xếp ngày theo thứ tự
             const [startDate, endDate] = selectedArray;
-  
+
             if (!isValidRange(startDate, endDate, selectedDates)) {
               alert('Khoảng giữa chứa ngày đã bị khóa. Vui lòng chọn lại!');
               resetSelection();
@@ -195,7 +206,7 @@ function renderCalender(selectedDatesRoom) {
         <button>Complete</button>
       `
     }
-    
+
   });
 }
 

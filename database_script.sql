@@ -6,7 +6,7 @@ CREATE TABLE Department (
 
 CREATE Table Users (
     id          INT PRIMARY KEY,
-    name        VARCHAR(100) NOT NULL UNIQUE,
+    name        VARCHAR(100) NOT NULL,
     SSN         VARCHAR(10) NOT NULL UNIQUE,
     email       VARCHAR(40) NOT NULL,
     password    VARCHAR(20) NOT NULL,
@@ -17,15 +17,22 @@ CREATE Table Users (
 );
 
 CREATE TABLE Doctor (  
-    ID VARCHAR(10) PRIMARY KEY,
-    doctor_ssn varchar(10) not null unique,  
-    name VARCHAR(100),  
-    Speciality VARCHAR(100),  
-    Department_ID INT,  
-    CONSTRAINT 	fk_doctor_ssn	FOREIGN KEY (doctor_ssn) 
-    REFERENCES Users(SSN) 
+    ID INT PRIMARY KEY, 
+    Speciality VARCHAR(100),   
+    CONSTRAINT 	fk_doctor_id	FOREIGN KEY (ID) 
+    REFERENCES Users(id) 
     ON DELETE CASCADE DEFERRABLE
 );  
+
+CREATE TABLE Doctor_Assigned (
+    Doctor_ID INT NOT NULL,
+    Department_ID INT NOT NULL,
+    PRIMARY KEY (Doctor_ID, Department_ID),
+    CONSTRAINT fk_doc_dep_doctor FOREIGN KEY (Doctor_ID) 
+        REFERENCES Doctor(ID) ON DELETE CASCADE DEFERRABLE,
+    CONSTRAINT fk_doc_dep_department FOREIGN KEY (Department_ID) 
+        REFERENCES Department(ID) ON DELETE CASCADE DEFERRABLE
+);
 
 CREATE TABLE Room (  
     ID INT PRIMARY KEY,  
@@ -33,76 +40,67 @@ CREATE TABLE Room (
     Room_type VARCHAR(50)  
 );  
 CREATE TABLE Patient (  
-    ID VARCHAR(10) PRIMARY KEY,  
-    patient_ssn varchar(10) not null unique,
-    Name VARCHAR(100),    
+    ID INT PRIMARY KEY,    
     Room_ID INT,
-    CONSTRAINT 	fk_patient_ssn	FOREIGN KEY (patient_ssn) 
-    REFERENCES Users(ssn) 
-    ON DELETE CASCADE DEFERRABLE ,
     CONSTRAINT 	fk_room_id	FOREIGN KEY (Room_ID) 
     REFERENCES Room(ID) 
     ON DELETE SET NULL DEFERRABLE
 );  
 
 CREATE TABLE Appointment (  
-    ID INT PRIMARY KEY,  
+    ID INT,  
     Date_regis DATE,  
     Time_regis TIMESTAMP,  
-    Patient_ssn VARCHAR(10) NOT NULL,  
-    Doctor_ssn VARCHAR(10) NOT NULL,  
-    CONSTRAINT 	fk_app_pa_ssn	FOREIGN KEY (Patient_ssn) 
-    REFERENCES Patient(patient_ssn) 
+    Patient_id INT,  
+    Doctor_id INT,  
+    PRIMARY KEY(ID, Patient_id, Doctor_id),
+    CONSTRAINT 	fk_app_pa_ssn	FOREIGN KEY (Patient_id) 
+    REFERENCES Patient(ID) 
     ON DELETE SET NULL DEFERRABLE,
-    CONSTRAINT 	fk_app_doc_ssn	FOREIGN KEY (Doctor_ssn) 
-    REFERENCES Doctor(Doctor_ssn) 
+    CONSTRAINT 	fk_app_doc_ssn	FOREIGN KEY (Doctor_id) 
+    REFERENCES Doctor(ID) 
     ON DELETE SET NULL DEFERRABLE  
 );  
 
 CREATE TABLE Treatment (  
-    ID INT PRIMARY KEY,  
+    ID INT,
+    Patient_id INT,  
+    Doctor_id INT, 
     Date_prescripted DATE,  
     Diagnosis VARCHAR(100),  
-    Medical_name VARCHAR(100),    
-    Medical_dosage VARCHAR(100),  
-    Appointment_ID INT,  
-    CONSTRAINT 	fk_treat_app	FOREIGN KEY (Appointment_ID) 
-    REFERENCES Appointment(ID) 
+    Invoice INT,
+    Feedback VARCHAR(200), 
+    CONSTRAINT 	fk_treat_doc	FOREIGN KEY (Doctor_id) 
+    REFERENCES Doctor(ID) 
+    ON DELETE SET NULL DEFERRABLE,
+    CONSTRAINT 	fk_treat_pa	FOREIGN KEY (Patient_id) 
+    REFERENCES Patient(ID) 
+    ON DELETE SET NULL DEFERRABLE
+);
+CREATE Table Dosage_Treament (
+    ID INT,
+    Patient_id INT,  
+    Doctor_id INT, 
+    Medical_name VARCHAR(10),
+    Medical_dosage VARCHAR(10),
+    CONSTRAINT 	fk_do_treat_doc	FOREIGN KEY (Doctor_id) 
+    REFERENCES Doctor(ID) 
+    ON DELETE SET NULL DEFERRABLE,
+    CONSTRAINT 	fk_do_treat_pa	FOREIGN KEY (Patient_id) 
+    REFERENCES Patient(ID) 
     ON DELETE SET NULL DEFERRABLE
 );
 
 CREATE TABLE Medical_Report (  
-    ID INT PRIMARY KEY,  
+    ID INT,  
     Diagnosis VARCHAR(100),  
-    Patient_ssn VARCHAR(10) NOT NULL,  
-    CONSTRAINT 	fk_med_pa_ssn	FOREIGN KEY (Patient_ssn) 
-    REFERENCES Patient(patient_ssn) 
+    Patient_id INT,  
+    PRIMARY KEY(ID, Patient_id),
+    CONSTRAINT 	fk_med_pa_id	FOREIGN KEY (Patient_id) 
+    REFERENCES Patient(ID) 
     ON DELETE SET NULL DEFERRABLE 
 );
-CREATE Table Invoice (
-    Patient_ssn VARCHAR(10) NOT NULL,  
-    Doctor_ssn VARCHAR(10) NOT NULL,
-    Amount INT,
-    Appointment_ID INT,
-    PRIMARY KEY (Patient_ssn, Doctor_ssn, Appointment_ID),
-    CONSTRAINT 	fk_invoice_doc_ssn	FOREIGN KEY (Doctor_ssn) 
-    REFERENCES Doctor(doctor_ssn) 
-    ON DELETE SET NULL DEFERRABLE ,
-    CONSTRAINT 	fk_invoice_pa_ssn	FOREIGN KEY (Patient_ssn) 
-    REFERENCES Patient(patient_ssn) 
-    ON DELETE SET NULL DEFERRABLE ,
-    CONSTRAINT 	fk_invoice_app_date	FOREIGN KEY (Appointment_ID) 
-    REFERENCES Appointment(ID) 
-    ON DELETE SET NULL DEFERRABLE 
-);
-CREATE TABLE Feedback (
-    ID INT PRIMARY KEY,
-    Patient_ssn varchar(10) not null,
-    Feedback_para varchar(100),
-    CONSTRAINT 	fk_feedback_pa_ssn	FOREIGN KEY (Patient_ssn) 
-    REFERENCES Patient(patient_ssn) 
-    ON DELETE SET NULL DEFERRABLE
-);
+
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------
 CREATE SEQUENCE users_seq START WITH 1;
@@ -226,6 +224,54 @@ FROM APPOINTMENT
 WHERE PATIENT_ID = 1
 ORDER BY TIME_REGIS DESC
 FETCH FIRST 1 ROWS ONLY;
+
+-- INSERT DATA INTO DEPARTMENT
+INSERT INTO Department (ID, Speciality) VALUES (1, 'Musculoskeletal System');
+INSERT INTO Department (ID, Speciality) VALUES (2, 'Neurology');
+INSERT INTO Department (ID, Speciality) VALUES (3, 'Gastroenterology');
+INSERT INTO Department (ID, Speciality) VALUES (4, 'Cardiology');
+INSERT INTO Department (ID, Speciality) VALUES (5, 'Ent - Eye - Odontology');
+INSERT INTO Department (ID, Speciality) VALUES (6, 'Spinal column');
+INSERT INTO Department (ID, Speciality) VALUES (7, 'Traditional medicine');
+INSERT INTO Department (ID, Speciality) VALUES (8, 'Acupuncture');
+INSERT INTO Department (ID, Speciality) VALUES (9, 'Obstetrics & Gynaecology');
+INSERT INTO Department (ID, Speciality) VALUES (10, 'Fetal Echocardiography');
+INSERT INTO Department (ID, Speciality) VALUES (11, 'Pediatrics');
+INSERT INTO Department (ID, Speciality) VALUES (12, 'Dermatology');
+INSERT INTO Department (ID, Speciality) VALUES (13, 'Hepato');
+INSERT INTO Department (ID, Speciality) VALUES (14, 'Mental health');
+INSERT INTO Department (ID, Speciality) VALUES (15, 'Immunology');
+INSERT INTO Department (ID, Speciality) VALUES (16, 'Respiratory - Lung');
+INSERT INTO Department (ID, Speciality) VALUES (17, 'Neurosurgery');
+INSERT INTO Department (ID, Speciality) VALUES (18, 'Andrology');
+INSERT INTO Department (ID, Speciality) VALUES (19, 'Ophthalmology');
+INSERT INTO Department (ID, Speciality) VALUES (20, 'Kidney - Urology');
+INSERT INTO Department (ID, Speciality) VALUES (21, 'Pediatric');
+INSERT INTO Department (ID, Speciality) VALUES (22, 'Dental');
+INSERT INTO Department (ID, Speciality) VALUES (23, 'Diabetes - Endocrine');
+INSERT INTO Department (ID, Speciality) VALUES (24, 'Rehabilitation');
+INSERT INTO Department (ID, Speciality) VALUES (25, 'MRI');
+INSERT INTO Department (ID, Speciality) VALUES (26, 'Computed tomography(CT)');
+INSERT INTO Department (ID, Speciality) VALUES (27, 'Gastroenterology');
+INSERT INTO Department (ID, Speciality) VALUES (28, 'Oncology');
+INSERT INTO Department (ID, Speciality) VALUES (29, 'Cosmetic dermatology');
+INSERT INTO Department (ID, Speciality) VALUES (30, 'Infectious diseases');
+INSERT INTO Department (ID, Speciality) VALUES (31, 'Family doctor');
+INSERT INTO Department (ID, Speciality) VALUES (32, 'Maxillofacial surgery');
+INSERT INTO Department (ID, Speciality) VALUES (33, 'Psychotherapy');
+INSERT INTO Department (ID, Speciality) VALUES (34, 'Infertility');
+INSERT INTO Department (ID, Speciality) VALUES (35, 'Trauma - Orthopedics');
+INSERT INTO Department (ID, Speciality) VALUES (36, 'Orthodontics');
+INSERT INTO Department (ID, Speciality) VALUES (37, 'Implant porcelain teeth');
+INSERT INTO Department (ID, Speciality) VALUES (38, 'Dental implant');
+INSERT INTO Department (ID, Speciality) VALUES (39, 'Wisdom tooth extraction');
+INSERT INTO Department (ID, Speciality) VALUES (40, 'General dentistry');
+INSERT INTO Department (ID, Speciality) VALUES (41, 'Pediatric Dentistry');
+INSERT INTO Department (ID, Speciality) VALUES (42, 'Thyroid');
+INSERT INTO Department (ID, Speciality) VALUES (43, 'Breast Specialist');
+
+SELECT COUNT(*) FROM DEPARTMENT;
+
 ---------------------------------------------------------------------------------------------------
 -- Trigger-to-Prevent-Deletion-of-Patients-with-Appointments
 CREATE TRIGGER PreventPatientDeletion  
@@ -252,12 +298,103 @@ BEGIN
 END;  
 /
 
+
+
+-- trigger to update patient or doctor when create user
+CREATE OR REPLACE TRIGGER trg_insert_user
+AFTER INSERT ON Users
+FOR EACH ROW
+BEGIN
+    IF UPPER(:NEW.role) = 'DOCTOR' THEN
+        INSERT INTO Doctor (ID, Speciality)
+        VALUES (:NEW.id, NULL);
+    ELSIF UPPER(:NEW.role) = 'PATIENT' THEN
+        INSERT INTO Patient (ID, Room_ID)
+        VALUES (:NEW.id, NULL);
+    END IF;
+END;
+/
+-- trigger to auto update speciality of doctor
+CREATE OR REPLACE TRIGGER trg_update_doctor_speciality
+AFTER INSERT ON Doctor_Assigned
+FOR EACH ROW
+DECLARE
+    dept_speciality VARCHAR2(100);
+    current_speciality VARCHAR2(4000);
+BEGIN
+    SELECT Speciality INTO dept_speciality
+    FROM Department
+    WHERE ID = :NEW.Department_ID;
+    SELECT Speciality INTO current_speciality
+    FROM Doctor
+    WHERE ID = :NEW.Doctor_ID;
+
+    IF current_speciality IS NULL THEN
+        UPDATE Doctor
+        SET Speciality = dept_speciality
+        WHERE ID = :NEW.Doctor_ID;
+    ELSIF INSTR(current_speciality, dept_speciality) = 0 THEN
+        UPDATE Doctor
+        SET Speciality = current_speciality || ', ' || dept_speciality
+        WHERE ID = :NEW.Doctor_ID;
+    END IF;
+END;
+/
+
 INSERT INTO USERS VALUES (users_seq.NEXTVAL, 'Huynh Tea', '0000000001', 'tea1@gmail.com', 'Khoa112345', 'MALE', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'PATIENT', TO_DATE('2000-01-01', 'YYYY-MM-DD'));
+INSERT INTO USERS VALUES (users_seq.NEXTVAL, 'Huynh Tea', '0000000001', 'tea1@gmail.com', 'Khoa112345', 'MALE', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'PATIENT', TO_DATE('2000-01-01', 'YYYY-MM-DD'));
+INSERT INTO USERS VALUES (users_seq.NEXTVAL, 'Le Duc Nghia', '0000000002', 'nghia@gmail.com', 'Nghia12345', 'MALE', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'DOCTOR', TO_DATE('2000-01-01', 'YYYY-MM-DD'));
+INSERT INTO USERS VALUES (users_seq.NEXTVAL, 'Le Duc Khang', '0000000003', 'kahng@gmail.com', 'Khang12345', 'MALE', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'DOCTOR', TO_DATE('2000-01-01', 'YYYY-MM-DD'));
 
-INSERT INTO Users (id, name, SSN, email, password, gender, DOB, role, registrationDate) 
-                VALUES (users_seq.NEXTVAL, 'Huynh Ngoc Khoa1', '0482040002', 'huynhkhoa340@gmail.com', 'Khoa03012004', 'FEMALE', TO_DATE(:dob, 'YYYY-MM-DD'), :role, TO_DATE(:registration_date, 'YYYY-MM-DD'))
+INSERT INTO DOCTOR_ASSIGNED VALUES(29,2);
+INSERT INTO DOCTOR_ASSIGNED VALUES(29,3);
+INSERT INTO DOCTOR_ASSIGNED VALUES(30,2);
+INSERT INTO DOCTOR_ASSIGNED VALUES(30,4);
+
+SELECT * FROM DEPARTMENT;
+SELECT SPECIALITY FROM DEPARTMENT WHERE ID = 2;
+SELECT SPECIALITY FROM DOCTOR WHERE ID = 29;
 
 
+
+
+SELECT 
+    d.ID, 
+    u.name, 
+    d.Speciality
+FROM 
+    Doctor d
+JOIN 
+    Users u
+ON 
+    d.ID = u.id;
+
+SELECT 
+    p.SSN AS Patient_ID, 
+    u_p.name AS Patient_Name, 
+    d.ID AS Doctor_ID, 
+    u_d.name AS Doctor_Name, 
+    d.Speciality AS Doctor_Department
+FROM 
+    Patient p
+JOIN 
+    Users u_p 
+ON 
+    p.ID = u_p.ID
+JOIN 
+    Appointment a 
+ON 
+    p.ID = a.Patient_ID
+JOIN 
+    Doctor d 
+ON 
+    a.Doctor_ID = d.ID
+JOIN 
+    Users u_d 
+ON 
+    d.ID = u_d.ID
+WHERE 
+    u_p.role = 'PATIENT' AND u_p.EMAIL = 'huynhkhoa340@gmail.com';
 
 
 
