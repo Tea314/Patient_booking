@@ -1,52 +1,57 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link  rel="stylesheet" href="styles/doctor-ui.css">
 
-    <!--Add font-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-  </head>
+<head>
+  <link rel="stylesheet" href="styles/doctor-ui.css">
 
-  <body>
-    <div class="header">
-      
-    </div>
+  <!--Add font-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet">
+</head>
 
-    <div style="margin: 0;
+<body>
+  <script type="text/javascript" src="/eel.js"></script>
+  <div class="header">
+
+  </div>
+
+  <div style="margin: 0;
         display: flex;
         height: 100%;">
-      <div class="side-bar">
-        <button class="consult-button">My consult</button>
-        <div style="position: relative;
+    <div class="side-bar">
+      <button class="consult-button">My consult</button>
+      <div style="position: relative;
           display: flex;
           flex-direction: column;">
-          <button class="availability-button">
-            My Availability
-            <div class="tooltip">Under Develop</div>
-          </button>
-          
-        </div>
-      </div>
-      <div class="content">
-        <h1>Your booking in this month</h1>
-        <div class="container">
-          
-        </div>
-      </div>
-    </div>
-    
+        <button class="availability-button">
+          My Availability
+          <div class="tooltip">Under Develop</div>
+        </button>
 
-    <div class="account-pop-up hidden">
-      <div class="information-pop-up">
       </div>
     </div>
+    <div class="content">
+      <h1>Your booking in this month</h1>
+      <div class="container">
 
-    <div class="report-pop-up hidden">
-      <div class="report-information-pop-up">
       </div>
     </div>
-    <script src="script/doctor-ui.js" type="module"></script>
-  </body>
+  </div>
+
+
+  <div class="account-pop-up hidden">
+    <div class="information-pop-up">
+    </div>
+  </div>
+
+  <div class="report-pop-up hidden">
+    <div class="report-information-pop-up">
+    </div>
+  </div>
+  <script src="script/doctor-ui.js" type="module"></script>
+</body>
+
 </html>

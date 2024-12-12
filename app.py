@@ -487,6 +487,43 @@ def main_window():
         else:
             return "Failed to connect to Oracle"
         
+
+    @eel.expose
+    def insert_doctor(name, ssn, email, password, gender, dob, role, registration_date, department_id):
+        conn = connect_db()
+        if conn: 
+            try:
+                cursor = conn.cursor()
+                insert_user_sql = f"""
+                INSERT INTO USERS 
+                VALUES (users_seq.NEXTVAL, :name, :ssn, :email, :password, :gender, TO_DATE(:dob, 'YYYY-MM-DD'), :role, TO_DATE(:registration_date, 'YYYY-MM-DD'))
+                """
+                cursor.execute(insert_user_sql, {
+                        'name': name,
+                        'ssn': ssn,
+                        'email': email,
+                        'password': password,
+                        'gender': gender.upper(),
+                        'dob': dob,
+                        'role': role,
+                        'registration_date': registration_date
+                    })
+                cursor.execute("SELECT users_seq.CURRVAL FROM DUAL")
+                new_user_id = cursor.fetchone()[0]
+                insert_doctor_assigned_sql = "INSERT INTO DOCTOR_ASSIGNED VALUES(:doctor_id, :department_id)"
+                cursor.execute(insert_doctor_assigned_sql, [new_user_id, department_id])
+                conn.commit()
+                print("Doctor inserted successfully!")
+                return "Success"
+            except oracledb.DatabaseError as e:
+                    print("Error during retrieve:", e)
+                    return str(e)
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+                return "Failed to connect to Oracle"
+        
     @eel.expose
     def get_role(email):
         conn = connect_db()
@@ -578,6 +615,59 @@ def main_window():
                     return dict(zip(keys, res))
                 else:
                     return None
+            except oracledb.DatabaseError as e:
+                print("Error during retrieve:", e)
+                return str(e)
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            return "Failed to connect to Oracle"
+        
+    @eel.expose
+    def get_all_patient():
+        conn = connect_db()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                SELECT id,name, ssn,email,password, GENDER,TO_CHAR(DOB,'YYYY-MM-DD'),role,TO_CHAR(REGISTRATIONDATE,'YYYY-MM-DD') FROM USERS WHERE ROLE = 'PATIENT'
+                """
+                cursor.execute(query)
+                res = cursor.fetchall()
+                if res:
+                    keys = ['id', 'name', 'ssn', 'email', 'password', 'gender', 'dob', 'role', 'registrationdate']
+                    result = [dict(zip(keys, row)) for row in res]
+                    print(result)
+                    return result
+                else:
+                    return []
+            except oracledb.DatabaseError as e:
+                print("Error during retrieve:", e)
+                return str(e)
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            return "Failed to connect to Oracle"
+    @eel.expose
+    def get_all_doctor():
+        conn = connect_db()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                SELECT id,name, ssn,email,password, GENDER,TO_CHAR(DOB,'YYYY-MM-DD'),role,TO_CHAR(REGISTRATIONDATE,'YYYY-MM-DD') FROM USERS WHERE ROLE = 'DOCTOR'
+                """
+                cursor.execute(query)
+                res = cursor.fetchall()
+                if res:
+                    keys = ['id', 'name', 'ssn', 'email', 'password', 'gender', 'dob', 'role', 'registrationdate']
+                    result = [dict(zip(keys, row)) for row in res]
+                    print(result)
+                    return result
+                else:
+                    return []
             except oracledb.DatabaseError as e:
                 print("Error during retrieve:", e)
                 return str(e)

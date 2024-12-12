@@ -1,3 +1,8 @@
+import { departments } from "./data/department.js";
+function getDepartmentIdByName(departmentName) {
+  const department = departments.find(dept => dept.name.toLowerCase() === departmentName.toLowerCase());
+  return department ? department.id : null; // Trả về id nếu tìm thấy, null nếu không tìm thấy
+}
 function renderLogin() {
   document.querySelector('.right').innerHTML = `
     <div class="login-box">
@@ -168,7 +173,7 @@ function renderLogin() {
         window.location.href = `../doctor-ui.html?email=${document.querySelector('.email').value}`;
       }
       else if (role === 'ADMIN') {
-
+        window.location.href = `../admin.html?email=${document.querySelector('.email').value}`;
       }
       else if (role === 'Wrong account') {
         window.alert('Not found account.\nPlease input again!!');
@@ -588,7 +593,7 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
                 font-size: 20px;
                 font-weight: 400;">Specialty</p>
       <div style="position: relative; width: 490px;">
-        <input class="specialty" required id="specialty" 
+        <input input list="departments" class="specialty" required id="specialty"
               type="specialty" 
               placeholder="Enter Specialty" 
               style="display: flex;
@@ -600,6 +605,51 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
                       gap: 10px;
                       border-radius: 10px;
                       border: 1px solid #B6B6B8;">
+                      <datalist id="departments">
+                        <option value="Musculoskeletal System">
+                        <option value="Neurology">
+                        <option value="Gastroenterology">
+                        <option value="Cardiology">
+                        <option value="Ent - Eye - Odontology">
+                        <option value="Spinal Column">
+                        <option value="Traditional Medicine">
+                        <option value="Acupuncture">
+                        <option value="Obstetrics - Gynaecology">
+                        <option value="Fetal Echocardiography">
+                        <option value="Pediatrics">
+                        <option value="Dermatology">
+                        <option value="Hepato">
+                        <option value="Mental Health">
+                        <option value="Immunology">
+                        <option value="Respiratory - Lung">
+                        <option value="Neurosurgery">
+                        <option value="Andrology">
+                        <option value="Ophthalmology">
+                        <option value="Kidney - Urology">
+                        <option value="Pediatric">
+                        <option value="Dental">
+                        <option value="Diabetes - Endocrine">
+                        <option value="Rehabilitation">
+                        <option value="MRI">
+                        <option value="Computed Tomography (CT)">
+                        <option value="Gastroenterology">
+                        <option value="Oncology">
+                        <option value="Cosmetic Dermatology">
+                        <option value="Infectious Diseases">
+                        <option value="Family Doctor">
+                        <option value="Maxillofacial Surgery">
+                        <option value="Psychotherapy">
+                        <option value="Infertility">
+                        <option value="Trauma - Orthopedics">
+                        <option value="Orthodontics">
+                        <option value="Implant Porcelain Teeth">
+                        <option value="Dental Implant">
+                        <option value="Wisdom Tooth Extraction">
+                        <option value="General Dentistry">
+                        <option value="Pediatric Dentistry">
+                        <option value="Thyroid">
+                        <option value="Breast Specialist">
+                      </datalist>
       </div>
     </div>
       `;
@@ -654,8 +704,15 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
     const id = idInput.value;
     const dob = dobInput.value;
     const gender = genderInput.value;
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0 nên cần +1
+    const day = String(today.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
     if (check) {
       const specialty = specialtyInput.value;
+      const id_department = getDepartmentIdByName(specialty);
+      console.log(id_department)
       let approve = {
         name: fullName,
         id: id,
@@ -665,15 +722,11 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
         email: savedEmail,
         password: savedPassword
       }
-      localStorage.setItem("approveData", JSON.stringify(approve));
-      console.log(localStorage)
+      console.log(approve);
+      const insert_doctor = await eel.insert_doctor(fullName, id, savedEmail, savedPassword, gender, dob, 'DOCTOR', formattedDate, id_department)();
+      console.log(insert_doctor);
     }
     else {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0 nên cần +1
-      const day = String(today.getDate()).padStart(2, '0');
-      const formattedDate = `${year}-${month}-${day}`;
       let approve = {
         name: fullName,
         id: id,
@@ -684,8 +737,8 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
         today: formattedDate
       };
       console.log(approve);
-      const insert_appoinment = await eel.insert_user(fullName, id, savedEmail, savedPassword, gender, dob, 'PATIENT', formattedDate);
-      console.log(insert_appoinment);
+      const insert_patient = await eel.insert_user(fullName, id, savedEmail, savedPassword, gender, dob, 'PATIENT', formattedDate);
+      console.log(insert_patient);
     }
     // Them else add vao db cho patient
     setTimeout(
@@ -696,4 +749,4 @@ function renderInformationInput(savedEmail, savedPassword, doctorCheck) {
 }
 
 
-renderLogin()
+renderLogin();

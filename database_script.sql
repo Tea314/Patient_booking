@@ -370,7 +370,7 @@ ON
     d.ID = u.id;
 
 SELECT 
-    p.SSN AS Patient_ID, 
+    u_p.SSN AS Patient_ID, 
     u_p.name AS Patient_Name, 
     d.ID AS Doctor_ID, 
     u_d.name AS Doctor_Name, 
@@ -395,6 +395,9 @@ ON
     d.ID = u_d.ID
 WHERE 
     u_p.role = 'PATIENT' AND u_p.EMAIL = 'huynhkhoa340@gmail.com';
+
+SELECT * FROM USERS WHERE ROLE = 'PATIENT';
+SELECT * FROM USERS WHERE ROLE = 'DOCTOR';
 
 
 
