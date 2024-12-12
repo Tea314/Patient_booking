@@ -170,6 +170,9 @@ function renderLogin() {
       else if (role === 'ADMIN') {
 
       }
+      else if (role === 'Wrong account') {
+        window.alert('Not found account.\nPlease input again!!');
+      }
     }
   })
 }
