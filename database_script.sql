@@ -427,3 +427,48 @@ AND DOCTOR_ID = 29;
 
 
 
+SELECT COUNT(*) FROM PATIENT_ADMISSION
+WHERE DATE_START = '2024-12-13' AND ROOM_ID = 1;
+
+INSERT INTO TREATMENT (ID, PATIENT_ID, DOCTOR_ID, DATE_PRESCRIPTED, DIAGNOSIS)
+VALUES ();
+INSERT INTO DOSAGE_TREAMENT (ID, PATIENT_ID, DOCTOR_ID, MEDICAL_NAME, MEDICAL_DOSAGE)
+values ();
+CREATE INDEX idx_name ON Users(NAME);
+drop INDEX IDX_NAME;
+SELECT INDEX_NAME, COLUMN_NAME
+FROM USER_IND_COLUMNS
+WHERE TABLE_NAME = 'USERS';
+SELECT * FROM USERS WHERE NAME like '%Khoa%';
+
+
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+    start_time NUMBER;
+    end_time NUMBER;
+BEGIN
+    -- Đo thời gian thực hiện truy vấn trước khi tạo index
+    start_time := DBMS_UTILITY.GET_TIME;
+    FOR rec IN (SELECT * FROM users WHERE name = 'User_83') LOOP
+        NULL; -- Duyệt qua để đảm bảo truy vấn được thực hiện
+    END LOOP;
+    end_time := DBMS_UTILITY.GET_TIME;
+    DBMS_OUTPUT.PUT_LINE('Time before creating index: ' || (end_time - start_time) || ' hundredths of seconds');
+
+    -- Tạo index
+    EXECUTE IMMEDIATE 'CREATE INDEX idx_users_name ON Users(name)';
+
+    -- Đo thời gian thực hiện truy vấn sau khi tạo index
+    start_time := DBMS_UTILITY.GET_TIME;
+    FOR rec IN (SELECT * FROM users WHERE name = 'User_83') LOOP
+        NULL; -- Duyệt qua để đảm bảo truy vấn được thực hiện
+    END LOOP;
+    end_time := DBMS_UTILITY.GET_TIME;
+    DBMS_OUTPUT.PUT_LINE('Time after creating index: ' || (end_time - start_time) || ' hundredths of seconds');
+
+    -- Xóa index để kiểm tra lại nếu cần
+    EXECUTE IMMEDIATE 'DROP INDEX idx_users_name';
+END;
+/

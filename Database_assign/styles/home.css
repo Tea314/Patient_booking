@@ -213,7 +213,26 @@ body {
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  width: 60px;
+  width: 80px;
+  font-size: 17px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.log-out-btn {
+  position: absolute;
+  bottom: -50px;
+  right: 10px;
+  padding: 7px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100px;
+  font-size: 17px;
+  height: 40px;
+  background-color: rgb(201, 65, 65);
+  color: white;
+  cursor: pointer;
 }
 
 .edit-profile-btn:hover {

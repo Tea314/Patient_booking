@@ -182,7 +182,7 @@ function renderLogin() {
   })
 }
 
-function renderSignUp() {
+async function renderSignUp() {
   document.querySelector('.right').innerHTML = `
     <form class="login-box">
       <div style="display: flex;
@@ -410,14 +410,23 @@ function renderSignUp() {
   passwordInput2.addEventListener('input', checkPasswordMatch);
 
   const emailInput = document.querySelector(".email");
-
-  emailInput.addEventListener('input', () => {
+  let afterChecked = false;
+  emailInput.addEventListener('input', async () => {
     if (!emailInput.value.includes("@gmail.com")) {
       emailInput.setCustomValidity("Must contains @gmail.com");
     } else {
       emailInput.setCustomValidity("");
     }
     checkPasswordMatch();
+    const check_mail = await eel.check_email(emailInput.value)();
+    console.log(check_mail);
+    if (check_mail > 0) {
+      alert("Email is already taken.");
+      afterChecked = true;
+    }
+    else {
+      afterChecked = false;
+    }
   })
 
   document.querySelector('.log-in-ui').addEventListener('click', () => {
@@ -425,10 +434,13 @@ function renderSignUp() {
   });
 
 
-  form.addEventListener('submit', (e) => {
-    if (!emailInput.checkValidity() || !passwordInput1.checkValidity()) {
+  form.addEventListener('submit', async (e) => {
+
+    if (!afterChecked || !emailInput.checkValidity() || !passwordInput1.checkValidity()) {
       e.preventDefault();
     }
+
+
     const savedEmail = emailInput.value;
     const savedPassword = passwordInput1.value;
     const doctor_check = doctorCheck.checked;

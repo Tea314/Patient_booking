@@ -153,8 +153,13 @@ function renderAccountPopup() {
         </div>
       </div>
       <button class="edit-profile-btn">Edit</button>
+      <button class="log-out-btn">Log out</button>
     </div>
   `;
+  const logOutButton = document.querySelector('.log-out-btn');
+  logOutButton.addEventListener('click', () => {
+    window.location.href = "authentication.html";
+  })
 
   const editButton = popupContent.querySelector('.edit-profile-btn');
   const displayModes = popupContent.querySelectorAll('.display-mode');

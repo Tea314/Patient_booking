@@ -4,6 +4,8 @@ const users = [
     { id: 3, name: "Dr. Bob Johnson", role: "Doctor", registered: "2024-01-15", status: "Pending" },
     { id: 4, name: "Jane Roe", role: "Patient", registered: "2024-01-20" },
 ];
+
+
 async function getAllPatient() {
     return await eel.get_all_patient()();
 }
@@ -41,21 +43,62 @@ export function renderTable(data, headers) {
 // Function to show all patients
 export async function showPatients() {
     const content = document.getElementById("content");
-    content.innerHTML = "<h1>All Patients</h1>";
+    content.innerHTML = `
+  <h1>All Patients</h1>
+  <div style="display: flex;
+    align-item: center;
+    gap: 20px;
+    margin-top: 30px;" class="search-row">
+    <input placeholder="Enter ID" type="text" class="search-box-patient">
+    <button>Submit</button>
+  </div>
+  <div class="patients-table-container"></div>
+`;
     const patients = await getAllPatient();
-    console.log(patients);
+    // console.log(patients);
+    const tableContainer = document.querySelector('.patients-table-container');
     const table = renderTable(patients, ["ID", "Name", "SSN", "Email", "Gender", "DOB", "RegistrationDate"]);
-    content.appendChild(table);
+    tableContainer.appendChild(table);
+
+    document.querySelector('.search-box-patient').addEventListener('input', (e) => {
+        console.log(e.target.value);
+        let newPatients = patients.filter(patient =>
+            patient.email.toLowerCase().includes(e.target.value.toLowerCase())
+        );
+        tableContainer.innerHTML = ''; // Xóa nội dung cũ
+        const newTable = renderTable(newPatients, ["ID", "Name", "SSN", "Email", "Gender", "DOB", "RegistrationDate"]);
+        tableContainer.appendChild(newTable);
+    });
 }
 
 // Function to show all doctors
 export async function showDoctors() {
     const content = document.getElementById("content");
-    content.innerHTML = "<h1>All Doctors</h1>";
-    const doctors = await getAllDoctor();
-    console.log(doctors);
+    content.innerHTML = `
+  <h1>All Doctors</h1>
+  <div style="display: flex;
+    align-item: center;
+    gap: 20px;
+    margin-top: 30px;" class="search-row">
+    <input placeholder="Enter ID" type="text" class="search-box-doctor">
+    <button>Submit</button>
+  </div>
+  <div class="doctors-table-container"></div>
+`;
+    const doctors = await getAllDoctor()
+    const tableContainer = document.querySelector('.doctors-table-container');
     const table = renderTable(doctors, ["ID", "Name", "SSN", "Email", "Gender", "DOB", "RegistrationDate"]);
-    content.appendChild(table);
+    tableContainer.appendChild(table);
+
+    document.querySelector('.search-box-doctor').addEventListener('input', (e) => {
+        console.log(e.target.value);
+        let newDoctors = doctors.filter(doctor =>
+            doctor.email.toLowerCase().includes(e.target.value.toLowerCase())
+        );
+        tableContainer.innerHTML = ''; // Xóa nội dung cũ
+        const newTable = renderTable(newDoctors, ["ID", "Name", "SSN", "Email", "Gender", "DOB", "RegistrationDate"]);
+        tableContainer.appendChild(newTable);
+    });
 }
 
 // Function to show new doctors for approval
@@ -74,3 +117,6 @@ document.getElementById("show-patients").addEventListener("click", showPatients)
 document.getElementById("show-doctors").addEventListener("click", showDoctors);
 document.getElementById("show-new-doctors").addEventListener("click", showNewDoctors);
 
+document.querySelector(".log-out-btn").addEventListener('click', () => {
+    window.location.href = "authentication.html"
+})

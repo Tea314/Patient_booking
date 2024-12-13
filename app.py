@@ -608,7 +608,7 @@ def main_window():
             try:
                 cursor = conn.cursor()
                 query = """
-                    SELECT a.ID, TO_CHAR(a.DATE_REGIS,'YYYY-MM-DD') as DATE_REGIS, TO_CHAR(a.TIME_REGIS,'HH24:MI') || ' - ' || TO_CHAR(a.TIME_REGIS + INTERVAL '10' MINUTE, 'HH24:MI') as TIME_REGIS , u.NAME
+                    SELECT a.ID, u.ssn, TO_CHAR(a.DATE_REGIS,'YYYY-MM-DD') as DATE_REGIS, TO_CHAR(a.TIME_REGIS,'HH24:MI') || ' - ' || TO_CHAR(a.TIME_REGIS + INTERVAL '10' MINUTE, 'HH24:MI') as TIME_REGIS , u.NAME
                     FROM APPOINTMENT a
                     JOIN USERS u ON a.PATIENT_ID = u.ID
                     WHERE a.DOCTOR_ID = (SELECT ID FROM USERS WHERE EMAIL = :email)
@@ -616,7 +616,7 @@ def main_window():
                 cursor.execute(query, {'email': email})
                 res = cursor.fetchall()
                 if res:
-                    keys = ['id','day', 'time', 'name']
+                    keys = ['id','ssn','day', 'time', 'name']
                     return [dict(zip(keys, row)) for row in res]
                 else:
                     return None
@@ -731,12 +731,40 @@ def main_window():
                 conn.close()
         else:
             return "Failed to connect to Oracle"
-
     @eel.expose
-    def show_book_room():
-        # conn = connect_db()
-        # cursor - conn.cursor()
-        room_show = [[8] * 10] * 30
+    def check_email(email):
+        conn = connect_db()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                SELECT COUNT(*) from users where email = :email
+                """
+                print(email)
+                cursor.execute(query, (email,))  # Passing email as a tuple
+                res = cursor.fetchone()
+                print(res[0])
+                if res:  # Checking if count > 0
+                    return res[0]
+                else:
+                    return 0  # No match found
+            except oracledb.DatabaseError as e:
+                print("Error during retrieve:", e)
+                return str(e)
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            return "Failed to connect to Oracle"
+
+
+    # @eel.expose
+    # def show_book_room():
+    #     # conn = connect_db()
+    #     # cursor - conn.cursor()
+    #     room_show = [[8] * 10] * 30
+    #     for row in room_show:
+
 
 
     try:

@@ -5,8 +5,9 @@ const email = url.searchParams.get('email');
 let information;
 (async function () {
 
-  const month = "December";
-  const year = "2024";
+  let month = "December";
+  let year = new Date();
+  year = year.getFullYear();
 
   async function getInformationAssignment(email) {
     return await eel.get_appointment_time(email)();
@@ -117,9 +118,13 @@ let information;
         </div>
       </div>
       <button class="edit-profile-btn">Edit</button>
+      <button class="log-out-btn">Log out</button>
     </div>
   `;
-
+    const logOutButton = document.querySelector('.log-out-btn');
+    logOutButton.addEventListener('click', () => {
+      window.location.href = "authentication.html";
+    })
     const editButton = popupContent.querySelector('.edit-profile-btn');
     const displayModes = popupContent.querySelectorAll('.display-mode');
     const editModes = popupContent.querySelectorAll('.edit-mode');
@@ -184,7 +189,7 @@ let information;
             <div>${date.name}</div>
           </div>
         </div>
-        <button class="report-button" data-day="${day}" data-date="${date.day}" data-name="${date.name}" data-id="${date.id}" disabled>Create Report</button>
+        <button class="report-button" data-day="${day}" data-date="${date.day}" data-name="${date.name}" data-id="${date.ssn}" disabled>Create Report</button>
       </div>
     `;
     })
