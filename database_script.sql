@@ -37,15 +37,24 @@ CREATE TABLE Doctor_Assigned (
 CREATE TABLE Room (  
     ID INT PRIMARY KEY,  
     Capacity INT,  
-    Room_type VARCHAR(50)  
+    Room_type VARCHAR(10) not null check (Room_type in ('NORMAL', 'DELUXE', 'PRIVATE')),
+    price DECIMAL(10, 2)
 );  
+
 CREATE TABLE Patient (  
     ID INT PRIMARY KEY,    
-    Room_ID INT,
-    CONSTRAINT 	fk_room_id	FOREIGN KEY (Room_ID) 
-    REFERENCES Room(ID) 
-    ON DELETE SET NULL DEFERRABLE
 );  
+
+CREATE TABLE Patient_admission (
+    Patient_ID INT,
+    Room_ID INT,
+    Date_start DATE, 
+    Date_end DATE,
+    CONSTRAINT fk_patient_admission_pa_id FOREIGN KEY (Patient_ID) 
+        REFERENCES Patient(ID) ON DELETE SET NULL DEFERRABLE,
+    CONSTRAINT fk_patient_admission_room_id FOREIGN KEY (Room_ID) 
+        REFERENCES Room(ID) ON DELETE SET NULL DEFERRABLE
+);
 
 CREATE TABLE Appointment (  
     ID INT,  
@@ -398,6 +407,23 @@ WHERE
 
 SELECT * FROM USERS WHERE ROLE = 'PATIENT';
 SELECT * FROM USERS WHERE ROLE = 'DOCTOR';
+
+SELECT u.id, u.name, u.ssn, TO_CHAR(u.DOB, 'YYYY-MM-DD') AS dob, u.GENDER, d.speciality
+FROM USERS u
+LEFT JOIN DOCTOR d ON u.ID = d.ID
+WHERE u.EMAIL = 'huynhkhoa240@gmail.com';
+
+
+SELECT a.ID, TO_CHAR(a.DATE_REGIS,'YYYY-MM-DD') as DATE_REGIS, TO_CHAR(a.TIME_REGIS,'HH24:MI') || ' - ' || TO_CHAR(a.TIME_REGIS + INTERVAL '10' MINUTE, 'HH24:MI') as TIME_REGIS , u.NAME
+FROM APPOINTMENT a
+JOIN USERS u ON a.PATIENT_ID = u.ID
+WHERE a.DOCTOR_ID = (SELECT ID FROM USERS WHERE EMAIL = 'nghia@gmail.com');
+
+
+SELECT TIME_REGIS 
+FROM APPOINTMENT 
+WHERE DATE_REGIS = TO_DATE("2024-12-13", 'YYYY-MM-DD') 
+AND DOCTOR_ID = 29;
 
 
 

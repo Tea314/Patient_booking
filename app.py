@@ -573,6 +573,61 @@ def main_window():
                 conn.close()
         else:
             return "Failed to connect to Oracle"
+    @eel.expose
+    def get_doctor(email):
+        conn = connect_db()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                SELECT u.id, u.name, u.ssn, TO_CHAR(u.DOB, 'YYYY-MM-DD') AS dob, u.GENDER, d.speciality
+                FROM USERS u
+                LEFT JOIN DOCTOR d ON u.ID = d.ID
+                WHERE u.EMAIL = :email
+                """
+                cursor.execute(query, {'email': email})
+                res = cursor.fetchone()
+                if res:
+                    keys = ['id','name', 'ssn', 'dob', 'gender', 'speciality']
+                    return dict(zip(keys, res))
+                else:
+                    return None
+            except oracledb.DatabaseError as e:
+                print("Error during retrieve:", e)
+                return str(e)
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            return "Failed to connect to Oracle"
+        
+    @eel.expose
+    def get_appointment_time(email):
+        conn = connect_db()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                    SELECT a.ID, TO_CHAR(a.DATE_REGIS,'YYYY-MM-DD') as DATE_REGIS, TO_CHAR(a.TIME_REGIS,'HH24:MI') || ' - ' || TO_CHAR(a.TIME_REGIS + INTERVAL '10' MINUTE, 'HH24:MI') as TIME_REGIS , u.NAME
+                    FROM APPOINTMENT a
+                    JOIN USERS u ON a.PATIENT_ID = u.ID
+                    WHERE a.DOCTOR_ID = (SELECT ID FROM USERS WHERE EMAIL = :email)
+                """
+                cursor.execute(query, {'email': email})
+                res = cursor.fetchall()
+                if res:
+                    keys = ['id','day', 'time', 'name']
+                    return [dict(zip(keys, row)) for row in res]
+                else:
+                    return None
+            except oracledb.DatabaseError as e:
+                print("Error during retrieve:", e)
+                return str(e)
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            return "Failed to connect to Oracle"
         
     @eel.expose
     def get_information_room_booking(email):
@@ -676,6 +731,13 @@ def main_window():
                 conn.close()
         else:
             return "Failed to connect to Oracle"
+
+    @eel.expose
+    def show_book_room():
+        # conn = connect_db()
+        # cursor - conn.cursor()
+        room_show = [[8] * 10] * 30
+
 
     try:
         eel.start("authentication.html", size=(1024, 1440))

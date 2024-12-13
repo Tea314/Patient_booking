@@ -14,6 +14,7 @@ let information;
 
   information = await getInformation(email);
   console.log(information);
+  renderHeader()
   renderInformation(information.id);
 })();
 
@@ -244,6 +245,14 @@ function closePopup() {
   }, { once: true });
 }
 
+function renderHeader() {
+  document.querySelector('.header').innerHTML = `
+        <img style="cursor: pointer;" class="arrow" src="/images/leading-icon.png">
+    `;
+  document.querySelector(".arrow").addEventListener('click', () => {
+    window.location.href = `home.html?email=${email}`;
+  })
+}
 
 
 

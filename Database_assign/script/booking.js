@@ -80,14 +80,21 @@ submitButton.addEventListener('click', () => {
 document.querySelector('.confirm-button').addEventListener('click', async () => {
   if (!document.querySelector('.confirm-button').disabled &&
     document.querySelector('.selected')) {
-    const doctor_id = await eel.find_doctor_id(dateSelected, document.querySelector('.selected').innerHTML.split('-')[0], deptName)();
-    console.log(doctor_id);
-    let confirm_response = `${deptName} - Name: ${information.name} - ID: ${information.id} - Gender: ${information.gender} - DOB: ${information.dob}
+    if (type.replace(/"/g, '') === "department") {
+      const doctor_id = await eel.find_doctor_id(dateSelected, document.querySelector('.selected').innerHTML.split('-')[0], deptName)();
+      console.log(doctor_id);
+      let confirm_response = `${deptName} - Name: ${information.name} - ID: ${information.id} - Gender: ${information.gender} - DOB: ${information.dob}
         Date: ${dateSelected} - Time: ${document.querySelector('.selected').innerHTML} - Doctor id: ${doctor_id}`;
-    document.querySelector('.test_2').innerHTML = confirm_response;
-    const insert_appoinment = await eel.add_appointment(dateSelected, document.querySelector('.selected').innerHTML.split('-')[0] + ":00", information.id, doctor_id);
+      document.querySelector('.test_2').innerHTML = confirm_response;
+      const insert_appoinment = await eel.add_appointment(dateSelected, document.querySelector('.selected').innerHTML.split('-')[0] + ":00", information.id, doctor_id);
+    } else {
+      let confirm_response = `${deptName} - Name: ${information.name} - ID: ${information.id} - Gender: ${information.gender} - DOB: ${information.dob}
+        Date: ${dateSelected} - Time: ${document.querySelector('.selected').innerHTML} - Doctor id: ${deptName}`;
+      document.querySelector('.test_2').innerHTML = confirm_response;
+      const insert_appoinment = await eel.add_appointment(dateSelected, document.querySelector('.selected').innerHTML.split('-')[0] + ":00", information.id, deptName);
+    }
     alert('Booking success!')
-    window.location.href = `home.html?email=${email}`
+    // window.location.href = `home.html?email=${email}`
   }
 })
 
@@ -134,7 +141,10 @@ async function renderTimeSlots(time) {
 
   }
   else {
+    console.log("test")
+    console.log(deptName);
     time_response = await eel.show_doctor_time(dateSelected, time, Number(deptName))();
+    console.log(time_response);
   }
   // document.querySelector('.test').innerHTML = time_response;
   if (time === "am") {
