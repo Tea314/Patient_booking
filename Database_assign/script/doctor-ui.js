@@ -94,8 +94,7 @@ let information;
         </div>
         <div class="info-row">
           <strong>ID:</strong> 
-          <span class="display-mode">${information.ssn}</span>
-          <input type="text" class="edit-mode" value="${information.ssn}" style="display:none;">
+          <span>${information.ssn}</span>
         </div>
         <div class="info-row">
           <strong>Date of Birth:</strong> 
@@ -113,8 +112,7 @@ let information;
         </div>
         <div class="info-row">
           <strong>Specialty:</strong> 
-          <span class="display-mode">${information.speciality}</span>
-          <input type="text" class="edit-mode" value="${information.specilatiy}" style="display:none;">
+          <span>${information.speciality}</span>
         </div>
       </div>
       <button class="edit-profile-btn">Edit</button>
@@ -189,7 +187,7 @@ let information;
             <div>${date.name}</div>
           </div>
         </div>
-        <button class="report-button" data-day="${day}" data-date="${date.day}" data-name="${date.name}" data-id="${date.ssn}" disabled>Create Report</button>
+        <button class="report-button" data-patient-id="${date.patient_id}" data-day="${day}" data-date="${date.day}" data-name="${date.name}" data-id="${date.ssn}" disabled>Create Report</button>
       </div>
     `;
     })
@@ -214,13 +212,14 @@ let information;
         const name = button.dataset.name;
         const day = button.dataset.date;
         const id = button.dataset.id;
+        const patient_id = Number(button.dataset.patientId);
         document.querySelector('.report-pop-up').classList.remove('hidden')
-        renderReportPopUp(name, id, day);
+        renderReportPopUp(name, id, day, patient_id);
       }
     })
   })
 
-  function renderReportPopUp(name, id, day) {
+  function renderReportPopUp(name, id, day, patient_id) {
     const popupContent = document.querySelector('.report-information-pop-up');
 
     // Trạng thái ban đầu của form
@@ -251,8 +250,11 @@ let information;
       if (document.querySelector(".diagnosis").value) {
         let reportId;
         const patientDiagnosis = document.querySelector('.diagnosis').value;
-        const patientId = id;
+        const patientId = patient_id;
+        console.log(patientId);
         closePopup(document.querySelector('.report-information-pop-up'));
+        const insert_report = eel.insert_report(patientId, patientDiagnosis)();
+        console.log(insert_report);
       }
     })
   }

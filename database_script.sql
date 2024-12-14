@@ -318,8 +318,8 @@ BEGIN
         INSERT INTO Doctor (ID, Speciality)
         VALUES (:NEW.id, NULL);
     ELSIF UPPER(:NEW.role) = 'PATIENT' THEN
-        INSERT INTO Patient (ID, Room_ID)
-        VALUES (:NEW.id, NULL);
+        INSERT INTO Patient (ID)
+        VALUES (:NEW.id);
     END IF;
 END;
 /
@@ -449,26 +449,60 @@ DECLARE
     start_time NUMBER;
     end_time NUMBER;
 BEGIN
-    -- Đo thời gian thực hiện truy vấn trước khi tạo index
     start_time := DBMS_UTILITY.GET_TIME;
     FOR rec IN (SELECT * FROM users WHERE name = 'User_83') LOOP
-        NULL; -- Duyệt qua để đảm bảo truy vấn được thực hiện
+        NULL; 
     END LOOP;
     end_time := DBMS_UTILITY.GET_TIME;
     DBMS_OUTPUT.PUT_LINE('Time before creating index: ' || (end_time - start_time) || ' hundredths of seconds');
-
-    -- Tạo index
     EXECUTE IMMEDIATE 'CREATE INDEX idx_users_name ON Users(name)';
-
-    -- Đo thời gian thực hiện truy vấn sau khi tạo index
     start_time := DBMS_UTILITY.GET_TIME;
     FOR rec IN (SELECT * FROM users WHERE name = 'User_83') LOOP
-        NULL; -- Duyệt qua để đảm bảo truy vấn được thực hiện
+        NULL; 
     END LOOP;
     end_time := DBMS_UTILITY.GET_TIME;
     DBMS_OUTPUT.PUT_LINE('Time after creating index: ' || (end_time - start_time) || ' hundredths of seconds');
-
-    -- Xóa index để kiểm tra lại nếu cần
     EXECUTE IMMEDIATE 'DROP INDEX idx_users_name';
 END;
 /
+SELECT COUNT(*) from users where email = 'huynhkhoa340@gmail.com';
+
+
+BEGIN
+    FOR i IN 1..1000000 LOOP
+        INSERT INTO Users (id, name, ssn, email, password, gender, dob, role, registrationDate)
+        VALUES (
+            i,
+            'User_' || i,
+            TO_CHAR(i, '0000000000'),
+            'user_' || i || '@example.com',
+            'password_' || i,
+            CASE MOD(i, 3)
+                WHEN 0 THEN 'MALE'
+                WHEN 1 THEN 'FEMALE'
+                ELSE 'OTHER'
+            END,
+            TRUNC(SYSDATE) - MOD(i, 365),
+            'PATIENT',
+            TRUNC(SYSDATE) - MOD(i, 100)
+        );
+    END LOOP;
+    COMMIT;
+END;
+/
+
+
+CREATE TRIGGER AfterAppointmentInsert  
+AFTER INSERT ON Appointment  
+FOR EACH ROW  
+BEGIN  
+    INSERT INTO Invoice (ID_Patient, Amount, IssueDate)  
+    VALUES (NEW.ID_Patient, 100.00, CURDATE());  
+END;
+
+
+UPDATE Users
+SET name = 'New Name',
+    DOB = TO_DATE('1990-01-01', 'YYYY-MM-DD'),
+    gender = 'MALE'
+WHERE id = 1;

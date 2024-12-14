@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
+import time
 import oracledb
 from tkinter import *
 from tkinter import messagebox
@@ -523,6 +524,31 @@ def main_window():
                 conn.close()
         else:
                 return "Failed to connect to Oracle"
+    @eel.expose
+    def insert_report(patient_id, diagnosis):
+        conn = connect_db()
+        if conn: 
+            try:
+                cursor = conn.cursor()
+                query = f"""
+                INSERT into MEDICAL_REPORT
+                VALUES (reports_seq.NEXTVAL,:diagnosis, :patient_id )
+                """
+                cursor.execute(query, {
+                        'diagnosis':diagnosis,
+                        'patient_id':patient_id
+                    })
+                conn.commit()
+                print("Report inserted successfully!")
+                return "Success"
+            except oracledb.DatabaseError as e:
+                    print("Error during retrieve:", e)
+                    return str(e)
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+                return "Failed to connect to Oracle"
         
     @eel.expose
     def get_role(email):
@@ -608,7 +634,7 @@ def main_window():
             try:
                 cursor = conn.cursor()
                 query = """
-                    SELECT a.ID, u.ssn, TO_CHAR(a.DATE_REGIS,'YYYY-MM-DD') as DATE_REGIS, TO_CHAR(a.TIME_REGIS,'HH24:MI') || ' - ' || TO_CHAR(a.TIME_REGIS + INTERVAL '10' MINUTE, 'HH24:MI') as TIME_REGIS , u.NAME
+                    SELECT a.ID,u.id, u.ssn, TO_CHAR(a.DATE_REGIS,'YYYY-MM-DD') as DATE_REGIS, TO_CHAR(a.TIME_REGIS,'HH24:MI') || ' - ' || TO_CHAR(a.TIME_REGIS + INTERVAL '10' MINUTE, 'HH24:MI') as TIME_REGIS , u.NAME
                     FROM APPOINTMENT a
                     JOIN USERS u ON a.PATIENT_ID = u.ID
                     WHERE a.DOCTOR_ID = (SELECT ID FROM USERS WHERE EMAIL = :email)
@@ -616,7 +642,7 @@ def main_window():
                 cursor.execute(query, {'email': email})
                 res = cursor.fetchall()
                 if res:
-                    keys = ['id','ssn','day', 'time', 'name']
+                    keys = ['id','patient_id','ssn','day', 'time', 'name']
                     return [dict(zip(keys, row)) for row in res]
                 else:
                     return None
@@ -732,6 +758,50 @@ def main_window():
         else:
             return "Failed to connect to Oracle"
     @eel.expose
+    def update_in4(email, name, gender, dob):
+        conn = connect_db()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                print("Updating user with the following details:")
+                print(f"Name: {name}")
+                print(f"Date: {dob}")
+                print(f"Gender: {gender.upper()}")
+                print(f"Email: {email}")
+                query = """
+                    UPDATE Users
+                    SET name = :name,
+                    DOB = TO_DATE(:dob, 'YYYY-MM-DD'),
+                    gender = :gender
+                    WHERE EMAIL = :email
+                """
+                gender = gender.upper()
+                bind_vars = {
+                    'name': name,
+                    'dob': dob,
+                    'gender': gender,
+                    'email': email
+                }
+                cursor.execute(query, bind_vars)
+                conn.commit()
+                # Kiểm tra số lượng bản ghi bị ảnh hưởng
+                if cursor.rowcount > 0:
+                    return "Success: User updated"
+                else:
+                    return "No rows updated: Check if email exists or if data is unchanged"
+            except oracledb.DatabaseError as e:
+                print("Error during update:", e)
+                return f"Error: {str(e)}"
+            
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            return "Failed to connect to Oracle"
+
+
+
+    @eel.expose
     def check_email(email):
         conn = connect_db()
         if conn:
@@ -741,13 +811,13 @@ def main_window():
                 SELECT COUNT(*) from users where email = :email
                 """
                 print(email)
-                cursor.execute(query, (email,))  # Passing email as a tuple
+                cursor.execute(query, (email,))  
                 res = cursor.fetchone()
                 print(res[0])
-                if res:  # Checking if count > 0
+                if res: 
                     return res[0]
                 else:
-                    return 0  # No match found
+                    return 0
             except oracledb.DatabaseError as e:
                 print("Error during retrieve:", e)
                 return str(e)
@@ -766,9 +836,33 @@ def main_window():
     #     for row in room_show:
 
 
+    def indexing():
+        conn = oracledb.connect(
+            user="KHOA",  # Oracle username
+            password="Khoa0301#",  # Oracle password
+            dsn="localhost/ORCLDB1",  # DSN: hostname/servicename (or SID)
+        )
+        cursor = conn.cursor()
+
+        start_time = time.time()
+        cursor.execute("SELECT * FROM users WHERE name = 'User_83'")
+        data = cursor.fetchall()
+        end_time = time.time()
+        print(f"Execution Time Without Index: {end_time - start_time:.2f} seconds")
+        cursor.execute("CREATE INDEX idx_users_name ON Users(name)")
+
+        start_time = time.time()
+        cursor.execute("SELECT * FROM users WHERE name = 'User_83'")
+        data = cursor.fetchall()
+        end_time = time.time()
+        print(f"Execution Time With Index: {end_time - start_time:.2f} seconds")
+        cursor.execute("DROP INDEX idx_users_name")
+        cursor.close()
+        conn.close()
 
     try:
-        eel.start("authentication.html", size=(1024, 1440))
+        # eel.start("authentication.html", size=(1024, 1440))
+        indexing()
     except (SystemExit, MemoryError, KeyboardInterrupt):
         pass
 
