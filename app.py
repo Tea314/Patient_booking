@@ -1,11 +1,12 @@
-from datetime import datetime, time, timedelta
+import json
+import subprocess
 import time
-import oracledb
+from datetime import datetime, time, timedelta
 from tkinter import *
 from tkinter import messagebox
-import subprocess
+
 import eel
-import json
+import oracledb
 
 
 def connect_db():
@@ -456,26 +457,31 @@ def main_window():
                 INSERT INTO Users (id, name, SSN, email, password, gender, DOB, role, registrationDate) 
                 VALUES (users_seq.NEXTVAL, :name, :ssn, :email, :password, :gender, TO_DATE(:dob, 'YYYY-MM-DD'), :role, TO_DATE(:registration_date, 'YYYY-MM-DD'))
                 """
-                print({
-                    'name': name,
-                    'ssn': ssn,
-                    'email': email,
-                    'password': password,
-                    'gender': gender.upper(),
-                    'dob': dob,
-                    'role': role,
-                    'registration_date': registration_date
-                })
-                cursor.execute(query, {
-                    'name': name,
-                    'ssn': ssn,
-                    'email': email,
-                    'password': password,
-                    'gender': gender.upper(),
-                    'dob': dob,
-                    'role': role,
-                    'registration_date': registration_date
-                })
+                print(
+                    {
+                        "name": name,
+                        "ssn": ssn,
+                        "email": email,
+                        "password": password,
+                        "gender": gender.upper(),
+                        "dob": dob,
+                        "role": role,
+                        "registration_date": registration_date,
+                    }
+                )
+                cursor.execute(
+                    query,
+                    {
+                        "name": name,
+                        "ssn": ssn,
+                        "email": email,
+                        "password": password,
+                        "gender": gender.upper(),
+                        "dob": dob,
+                        "role": role,
+                        "registration_date": registration_date,
+                    },
+                )
                 conn.commit()
                 print("User inserted successfully!")
                 return "Success"
@@ -487,69 +493,75 @@ def main_window():
                 conn.close()
         else:
             return "Failed to connect to Oracle"
-        
 
     @eel.expose
-    def insert_doctor(name, ssn, email, password, gender, dob, role, registration_date, department_id):
+    def insert_doctor(
+        name, ssn, email, password, gender, dob, role, registration_date, department_id
+    ):
         conn = connect_db()
-        if conn: 
+        if conn:
             try:
                 cursor = conn.cursor()
                 insert_user_sql = f"""
                 INSERT INTO USERS 
                 VALUES (users_seq.NEXTVAL, :name, :ssn, :email, :password, :gender, TO_DATE(:dob, 'YYYY-MM-DD'), :role, TO_DATE(:registration_date, 'YYYY-MM-DD'))
                 """
-                cursor.execute(insert_user_sql, {
-                        'name': name,
-                        'ssn': ssn,
-                        'email': email,
-                        'password': password,
-                        'gender': gender.upper(),
-                        'dob': dob,
-                        'role': role,
-                        'registration_date': registration_date
-                    })
+                cursor.execute(
+                    insert_user_sql,
+                    {
+                        "name": name,
+                        "ssn": ssn,
+                        "email": email,
+                        "password": password,
+                        "gender": gender.upper(),
+                        "dob": dob,
+                        "role": role,
+                        "registration_date": registration_date,
+                    },
+                )
                 cursor.execute("SELECT users_seq.CURRVAL FROM DUAL")
                 new_user_id = cursor.fetchone()[0]
-                insert_doctor_assigned_sql = "INSERT INTO DOCTOR_ASSIGNED VALUES(:doctor_id, :department_id)"
+                insert_doctor_assigned_sql = (
+                    "INSERT INTO DOCTOR_ASSIGNED VALUES(:doctor_id, :department_id)"
+                )
                 cursor.execute(insert_doctor_assigned_sql, [new_user_id, department_id])
                 conn.commit()
                 print("Doctor inserted successfully!")
                 return "Success"
             except oracledb.DatabaseError as e:
-                    print("Error during retrieve:", e)
-                    return str(e)
+                print("Error during retrieve:", e)
+                return str(e)
             finally:
                 cursor.close()
                 conn.close()
         else:
-                return "Failed to connect to Oracle"
+            return "Failed to connect to Oracle"
+
     @eel.expose
     def insert_report(patient_id, diagnosis):
         conn = connect_db()
-        if conn: 
+        if conn:
             try:
                 cursor = conn.cursor()
                 query = f"""
                 INSERT into MEDICAL_REPORT
                 VALUES (reports_seq.NEXTVAL,:diagnosis, :patient_id )
                 """
-                cursor.execute(query, {
-                        'diagnosis':diagnosis,
-                        'patient_id':patient_id
-                    })
+                cursor.execute(
+                    query, {"diagnosis": diagnosis, "patient_id": patient_id}
+                )
                 conn.commit()
                 print("Report inserted successfully!")
                 return "Success"
             except oracledb.DatabaseError as e:
-                    print("Error during retrieve:", e)
-                    return str(e)
+                print("Error during retrieve:", e)
+                return str(e)
             finally:
                 cursor.close()
                 conn.close()
         else:
-                return "Failed to connect to Oracle"
-        
+            return "Failed to connect to Oracle"
+
     @eel.expose
     def get_role(email):
         conn = connect_db()
@@ -559,7 +571,7 @@ def main_window():
                 query = """
                 SELECT role from USERS WHERE EMAIL = :email
                 """
-                cursor.execute(query, {'email': email})
+                cursor.execute(query, {"email": email})
                 role = cursor.fetchone()
                 if role == None:
                     return "Wrong account"
@@ -574,7 +586,7 @@ def main_window():
                 conn.close()
         else:
             return "Failed to connect to Oracle"
-        
+
     @eel.expose
     def get_name(email):
         conn = connect_db()
@@ -584,10 +596,10 @@ def main_window():
                 query = """
                 SELECT id,name, ssn, TO_CHAR(DOB,'YYYY-MM-DD'),GENDER from users WHERE EMAIL = :email
                 """
-                cursor.execute(query, {'email': email})
+                cursor.execute(query, {"email": email})
                 res = cursor.fetchone()
                 if res:
-                    keys = ['id','name', 'ssn', 'dob', 'gender']
+                    keys = ["id", "name", "ssn", "dob", "gender"]
                     return dict(zip(keys, res))
                 else:
                     return None
@@ -599,6 +611,7 @@ def main_window():
                 conn.close()
         else:
             return "Failed to connect to Oracle"
+
     @eel.expose
     def get_doctor(email):
         conn = connect_db()
@@ -611,10 +624,10 @@ def main_window():
                 LEFT JOIN DOCTOR d ON u.ID = d.ID
                 WHERE u.EMAIL = :email
                 """
-                cursor.execute(query, {'email': email})
+                cursor.execute(query, {"email": email})
                 res = cursor.fetchone()
                 if res:
-                    keys = ['id','name', 'ssn', 'dob', 'gender', 'speciality']
+                    keys = ["id", "name", "ssn", "dob", "gender", "speciality"]
                     return dict(zip(keys, res))
                 else:
                     return None
@@ -626,7 +639,7 @@ def main_window():
                 conn.close()
         else:
             return "Failed to connect to Oracle"
-        
+
     @eel.expose
     def get_appointment_time(email):
         conn = connect_db()
@@ -639,10 +652,10 @@ def main_window():
                     JOIN USERS u ON a.PATIENT_ID = u.ID
                     WHERE a.DOCTOR_ID = (SELECT ID FROM USERS WHERE EMAIL = :email)
                 """
-                cursor.execute(query, {'email': email})
+                cursor.execute(query, {"email": email})
                 res = cursor.fetchall()
                 if res:
-                    keys = ['id','patient_id','ssn','day', 'time', 'name']
+                    keys = ["id", "patient_id", "ssn", "day", "time", "name"]
                     return [dict(zip(keys, row)) for row in res]
                 else:
                     return None
@@ -654,7 +667,7 @@ def main_window():
                 conn.close()
         else:
             return "Failed to connect to Oracle"
-        
+
     @eel.expose
     def get_information_room_booking(email):
         conn = connect_db()
@@ -689,10 +702,16 @@ def main_window():
                     WHERE 
                         u_p.role = 'PATIENT' AND u_p.EMAIL = :email
                 """
-                cursor.execute(query, {'email': email})
+                cursor.execute(query, {"email": email})
                 res = cursor.fetchone()
                 if res:
-                    keys = ['patient_id','patient_name', 'doctor_id', 'doctor_name', 'speciality']
+                    keys = [
+                        "patient_id",
+                        "patient_name",
+                        "doctor_id",
+                        "doctor_name",
+                        "speciality",
+                    ]
                     return dict(zip(keys, res))
                 else:
                     return None
@@ -704,7 +723,7 @@ def main_window():
                 conn.close()
         else:
             return "Failed to connect to Oracle"
-        
+
     @eel.expose
     def get_all_patient():
         conn = connect_db()
@@ -717,7 +736,17 @@ def main_window():
                 cursor.execute(query)
                 res = cursor.fetchall()
                 if res:
-                    keys = ['id', 'name', 'ssn', 'email', 'password', 'gender', 'dob', 'role', 'registrationdate']
+                    keys = [
+                        "id",
+                        "name",
+                        "ssn",
+                        "email",
+                        "password",
+                        "gender",
+                        "dob",
+                        "role",
+                        "registrationdate",
+                    ]
                     result = [dict(zip(keys, row)) for row in res]
                     print(result)
                     return result
@@ -731,6 +760,7 @@ def main_window():
                 conn.close()
         else:
             return "Failed to connect to Oracle"
+
     @eel.expose
     def get_all_doctor():
         conn = connect_db()
@@ -743,7 +773,17 @@ def main_window():
                 cursor.execute(query)
                 res = cursor.fetchall()
                 if res:
-                    keys = ['id', 'name', 'ssn', 'email', 'password', 'gender', 'dob', 'role', 'registrationdate']
+                    keys = [
+                        "id",
+                        "name",
+                        "ssn",
+                        "email",
+                        "password",
+                        "gender",
+                        "dob",
+                        "role",
+                        "registrationdate",
+                    ]
                     result = [dict(zip(keys, row)) for row in res]
                     print(result)
                     return result
@@ -757,6 +797,7 @@ def main_window():
                 conn.close()
         else:
             return "Failed to connect to Oracle"
+
     @eel.expose
     def update_in4(email, name, gender, dob):
         conn = connect_db()
@@ -776,30 +817,25 @@ def main_window():
                     WHERE EMAIL = :email
                 """
                 gender = gender.upper()
-                bind_vars = {
-                    'name': name,
-                    'dob': dob,
-                    'gender': gender,
-                    'email': email
-                }
+                bind_vars = {"name": name, "dob": dob, "gender": gender, "email": email}
                 cursor.execute(query, bind_vars)
                 conn.commit()
                 # Kiểm tra số lượng bản ghi bị ảnh hưởng
                 if cursor.rowcount > 0:
                     return "Success: User updated"
                 else:
-                    return "No rows updated: Check if email exists or if data is unchanged"
+                    return (
+                        "No rows updated: Check if email exists or if data is unchanged"
+                    )
             except oracledb.DatabaseError as e:
                 print("Error during update:", e)
                 return f"Error: {str(e)}"
-            
+
             finally:
                 cursor.close()
                 conn.close()
         else:
             return "Failed to connect to Oracle"
-
-
 
     @eel.expose
     def check_email(email):
@@ -811,10 +847,10 @@ def main_window():
                 SELECT COUNT(*) from users where email = :email
                 """
                 print(email)
-                cursor.execute(query, (email,))  
+                cursor.execute(query, (email,))
                 res = cursor.fetchone()
                 print(res[0])
-                if res: 
+                if res:
                     return res[0]
                 else:
                     return 0
@@ -827,14 +863,12 @@ def main_window():
         else:
             return "Failed to connect to Oracle"
 
-
     # @eel.expose
     # def show_book_room():
     #     # conn = connect_db()
     #     # cursor - conn.cursor()
     #     room_show = [[8] * 10] * 30
     #     for row in room_show:
-
 
     def indexing():
         conn = oracledb.connect(
@@ -861,8 +895,8 @@ def main_window():
         conn.close()
 
     try:
-        # eel.start("authentication.html", size=(1024, 1440))
-        indexing()
+        eel.start("authentication.html", size=(1024, 1440))
+        # indexing()
     except (SystemExit, MemoryError, KeyboardInterrupt):
         pass
 

@@ -113,6 +113,7 @@ CREATE TABLE Medical_Report (
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------
 CREATE SEQUENCE users_seq START WITH 1;
+CREATE SEQUENCE reports_seq START WITH 1;
 alter sequence users_seq restart start with 1;
 SELECT users_seq.NEXTVAL FROM DUAL;
 
@@ -420,10 +421,11 @@ JOIN USERS u ON a.PATIENT_ID = u.ID
 WHERE a.DOCTOR_ID = (SELECT ID FROM USERS WHERE EMAIL = 'nghia@gmail.com');
 
 
-SELECT TIME_REGIS 
+SELECT id,TIME_REGIS 
 FROM APPOINTMENT 
-WHERE DATE_REGIS = TO_DATE("2024-12-13", 'YYYY-MM-DD') 
-AND DOCTOR_ID = 29;
+WHERE id in (SELECT id from APPOINTMENT where DATE_REGIS = TO_DATE('2024-12-14', 'YYYY-MM-DD') AND DOCTOR_ID = 29);
+
+SELECT * from APPOINTMENT where DATE_REGIS = TO_DATE('2024-12-14', 'YYYY-MM-DD') AND DOCTOR_ID = 29;
 
 
 
@@ -502,7 +504,25 @@ END;
 
 
 UPDATE Users
-SET name = 'New Name',
-    DOB = TO_DATE('1990-01-01', 'YYYY-MM-DD'),
+SET name = 'Huynh Ngoc Khoa10',
+    DOB = TO_DATE('2004-04-03', 'YYYY-MM-DD'),
     gender = 'MALE'
-WHERE id = 1;
+WHERE EMAIL = 'huynhkhoa340@gmail.com';
+
+INSERT into MEDICAL_REPORT
+VALUES (reports_seq.NEXTVAL,'Test', 28 );
+
+SELECT ID FROM USERS
+WHERE EXISTS (SELECT a.PATIENT_ID 
+FROM APPOINTMENT a
+JOIN USERS u ON a.PATIENT_ID = u.ID
+WHERE a.PATIENT_ID < 28);
+
+SELECT a.PATIENT_ID 
+FROM APPOINTMENT a
+JOIN USERS u ON a.PATIENT_ID = u.ID
+WHERE a.PATIENT_ID < 28;
+SELECT COUNT(id) FROM USERS;
+
+select MAX(ID) FROM USERS;
+CREATE VIEW ON medical_report;
