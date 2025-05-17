@@ -109,8 +109,8 @@ The database is designed to meet BCNF normalization requirements, ensuring no da
 ### Installation Steps
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/Tea314/Cafes-Viewing-Website
-   cd Cafes-Viewing-Website
+   git clone https://github.com/Tea314/Patient_booking
+   cd Patient_booking
    ```
 
 2. **Set Up the Oracle Database**:
